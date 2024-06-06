@@ -1,15 +1,29 @@
-import { View, Text } from 'react-native'
+import { View, Text, StyleSheet} from 'react-native'
 import React from 'react'
 import {Link} from 'expo-router'
-import { blue } from 'react-native-reanimated/lib/typescript/reanimated2/Colors'
 
 export default function SquizzyScreen() {
   return (
-    <View>
+    <View style={styles.container}>
       <Text>Your favorite quiz app </Text>
       <Text>Create an account to start squizzying!</Text>
-      
-      <Link href="(app)/start"> tela index da pasta app ISSO É UM LINK</Link>
+
+
+      <Link href={"/SignIn"}> Sign In</Link>
+      <Link href={"/CreateAccount"}> Create Account</Link>
+      <Link href={"/home"}> ir tela home</Link>
+
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container:{
+    flex:1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
+
+
+})
