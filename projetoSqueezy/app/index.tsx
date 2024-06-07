@@ -7,6 +7,9 @@ import{useFonts, Poppins_100Thin,Poppins_300Light, Poppins_900Black_Italic} from
 
 export default function SquizzyScreen() {
   let [fonts] = useFonts({Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic});
+
+ 
+ 
   return (
     <View style={styles.container}>
 

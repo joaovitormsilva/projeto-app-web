@@ -1,13 +1,20 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Button } from 'react-native'
 import React from 'react'
-import {Link} from "expo-router"
+import {Link, router} from "expo-router"
+
+
 export default function SignInScreen() {
+
+  function limparNavegacao(){
+    router.replace("/home")
+  }
+
   return (
     <View style={styles.container}>
       <Text>SignIn</Text>
 
 
-      <Link href={"/home"}> ir tela home</Link>
+      <Button title="Ir pra home" onPress={limparNavegacao}/>
 
     </View>
   )

@@ -1,8 +1,14 @@
-import {Image, View, Text, StyleSheet} from 'react-native'
+import {Image, View, Text, StyleSheet, Button} from 'react-native'
 import React from 'react'
-import {Link} from "expo-router"
+import {Link, router} from "expo-router"
 
 export default function CreateAccountScreen() {
+
+
+  function limparNavegacao(){
+    router.replace("/home")
+  }
+
   return (
     <View style={styles.container}>
 
@@ -19,8 +25,9 @@ export default function CreateAccountScreen() {
 
         <Text>User</Text>
         
-      <Link href={"/home"}> Pagina home</Link>
-    </View>
+        <Button title="Ir pra home" onPress={limparNavegacao}/>
+      
+      </View>
   )
 }
 

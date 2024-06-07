@@ -10,7 +10,6 @@ export default function Layout() {
       <Tabs.Screen name="ranking/index" options={{headerShown: false}}/>
       <Tabs.Screen name="profile/index" options={{headerShown: false}}/>
 
-
     </Tabs>
   )
 }

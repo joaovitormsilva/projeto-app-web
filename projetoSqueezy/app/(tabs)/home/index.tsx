@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Alert} from 'react-native'
 import React, {useState} from 'react'
-import {useNavigation } from 'expo-router';
+import {useNavigation, Link } from 'expo-router';
 import { useEffect } from 'react';
 
 export default function HomeScreen() {
@@ -47,7 +47,7 @@ export default function HomeScreen() {
 
         <View style={styles.row}>
           <View style={[styles.box, {backgroundColor: 'powderblue'}]}>
-            <Text>Create Quiz</Text>
+          
           </View>
           <View style={[styles.box, {backgroundColor: 'skyblue'}]}>
             <Text>Join Quiz</Text>
