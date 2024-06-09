@@ -8,8 +8,8 @@ import{useFonts, Poppins_100Thin,Poppins_300Light, Poppins_900Black_Italic} from
 export default function SquizzyScreen() {
   let [fonts] = useFonts({Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic});
 
- 
- 
+
+
   return (
     <View style={styles.container}>
 
@@ -24,7 +24,7 @@ export default function SquizzyScreen() {
 
       <TouchableOpacity style={[styles.box, styles.BoxCreateAccount, { marginBottom: '10%', marginTop: '20%' }]}>
         <Link href={"/CreateAccount"} style={styles.fullAreaLink}>
-            <Text style={[styles.text, { color: "#05203C" }]}>Create Account</Text>
+            <Text style={[styles.buttonText, { color: "#05203C" }]}>Create Account</Text>
         </Link>
       </TouchableOpacity>
 
@@ -59,7 +59,13 @@ const styles = StyleSheet.create({
   text:{
     color: '#fff',
     fontSize: 18,
-    fontFamily: "Poppins_300Light"
+    fontFamily: "Poppins_300Light",
+    textAlign: 'center',
+  },
+  buttonText: {
+      fontSize: 18,
+      fontFamily: "Poppins_300Light",
+      textAlign: 'center',
   },
 
   BoxCreateAccount:{
@@ -72,13 +78,14 @@ const styles = StyleSheet.create({
   fullAreaLink: {
       width: '100%',
       height: '100%',
+      display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      display: 'flex'
+
   },
   reactLogo: {
     height: '40%',
     width: '60%',
-    
+
   },
 })
