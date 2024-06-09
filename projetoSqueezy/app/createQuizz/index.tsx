@@ -1,10 +1,11 @@
-import React from 'react';
-import { Image, View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFonts, Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic } from '@expo-google-fonts/poppins';
 
-export default function SquizzyScreen() {
+export default function CreateQuizScreen() {
   const router = useRouter();
+  const [inputText, setInputText] = useState<string>('');
   let [fontsLoaded] = useFonts({ Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic });
 
   if (!fontsLoaded) {
@@ -13,10 +14,13 @@ export default function SquizzyScreen() {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/images/SquizzyLogo3.png')} style={styles.reactLogo} />
-
-      <Text style={styles.text}>Your favorite quiz app</Text>
-      <Text style={styles.text}>Create an account to start squizzying!</Text>
+      <TextInput
+        style={styles.input}
+        value={inputText}
+        onChangeText={setInputText}
+        placeholder="Type something..."
+        placeholderTextColor="#aaa"
+      />
 
       <TouchableOpacity
         style={[styles.box, styles.boxCreateAccount, { marginBottom: '10%', marginTop: '20%' }]}
@@ -25,8 +29,6 @@ export default function SquizzyScreen() {
       >
         <Text style={[styles.text, styles.linkText]}>Create Account</Text>
       </TouchableOpacity>
-
-      <Text style={styles.text}>Already have an account?</Text>
 
       <TouchableOpacity
         style={[styles.box, styles.boxSignIn]}
@@ -69,9 +71,14 @@ const styles = StyleSheet.create({
   boxSignIn: {
     backgroundColor: '#FFFFFF',
   },
-  reactLogo: {
-    height: '40%',
-    width: '70%',
-    resizeMode: 'contain',
+  input: {
+    width: '80%',
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 20,
+    paddingLeft: 10,
+    color: '#fff',
   },
 });

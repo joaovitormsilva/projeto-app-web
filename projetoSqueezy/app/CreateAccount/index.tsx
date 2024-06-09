@@ -25,6 +25,7 @@ export default function CreateAccountScreen() {
 
         <Text>User</Text>
         
+        <Link href="/createQuizz" style={{backgroundColor:"yellow"}}>Create quizz BOTÃO </Link>
         <Button title="Ir pra home" onPress={limparNavegacao}/>
       
       </View>
