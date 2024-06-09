@@ -1,45 +1,34 @@
-import React from 'react';
-import { Image, View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFonts, Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic } from '@expo-google-fonts/poppins';
 
-export default function SquizzyScreen() {
+export default function CreateQuizScreen() {
   const router = useRouter();
+  const [inputText, setInputText] = useState<string>('');
   let [fontsLoaded] = useFonts({ Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic });
 
   if (!fontsLoaded) {
     return <ActivityIndicator size="large" color="#FCC307" />;
   }
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 4b252bb2dde39eb8d7870f1b96c3561631c87230
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/images/SquizzyLogo3.png')} style={styles.reactLogo} />
+      <TextInput
+        style={styles.input}
+        value={inputText}
+        onChangeText={setInputText}
+        placeholder="Type something..."
+        placeholderTextColor="#aaa"
+      />
 
-      <Text style={styles.text}>Your favorite quiz app</Text>
-      <Text style={styles.text}>Create an account to start squizzying!</Text>
-
-<<<<<<< HEAD
-
-      <TouchableOpacity style={[styles.box, styles.BoxCreateAccount, { marginBottom: '10%', marginTop: '20%' }]}>
-        <Link href={"/CreateAccount"} style={styles.fullAreaLink}>
-            <Text style={[styles.buttonText, { color: "#05203C" }]}>Create Account</Text>
-        </Link>
-=======
       <TouchableOpacity
         style={[styles.box, styles.boxCreateAccount, { marginBottom: '10%', marginTop: '20%' }]}
         onPress={() => router.push('/CreateAccount')}
         accessibilityLabel="Create Account"
       >
         <Text style={[styles.text, styles.linkText]}>Create Account</Text>
->>>>>>> 4b252bb2dde39eb8d7870f1b96c3561631c87230
       </TouchableOpacity>
-
-      <Text style={styles.text}>Already have an account?</Text>
 
       <TouchableOpacity
         style={[styles.box, styles.boxSignIn]}
@@ -70,18 +59,8 @@ const styles = StyleSheet.create({
   text: {
     color: '#fff',
     fontSize: 18,
-<<<<<<< HEAD
-    fontFamily: "Poppins_300Light",
-    textAlign: 'center',
-  },
-  buttonText: {
-      fontSize: 18,
-      fontFamily: "Poppins_300Light",
-      textAlign: 'center',
-=======
     fontFamily: 'Poppins_300Light',
     textAlign: 'center',
->>>>>>> 4b252bb2dde39eb8d7870f1b96c3561631c87230
   },
   linkText: {
     color: '#05203C',
@@ -89,27 +68,17 @@ const styles = StyleSheet.create({
   boxCreateAccount: {
     backgroundColor: '#FCC307',
   },
-<<<<<<< HEAD
-  fullAreaLink: {
-      width: '100%',
-      height: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-
-  },
-  reactLogo: {
-    height: '40%',
-    width: '60%',
-
-=======
   boxSignIn: {
     backgroundColor: '#FFFFFF',
   },
-  reactLogo: {
-    height: '40%',
-    width: '70%',
-    resizeMode: 'contain',
->>>>>>> 4b252bb2dde39eb8d7870f1b96c3561631c87230
+  input: {
+    width: '80%',
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 20,
+    paddingLeft: 10,
+    color: '#fff',
   },
 });

@@ -1,170 +1,201 @@
-import { View, Text, StyleSheet, Alert} from 'react-native'
-import React, {useState} from 'react'
-import {useNavigation, Link } from 'expo-router';
-import { useEffect } from 'react';
+import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
+import { useNavigation, Link, useRouter } from 'expo-router';
 
 export default function HomeScreen() {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
+  const router = useRouter();
 
-
-    useEffect(() => { 
-        navigation.addListener('beforeRemove', (e) => {
-            e.preventDefault();
-            console.log('onback');
-            Alert.alert(
-              "Deseja sair do app?",
-              undefined,
-              [
-                { text: "Não", style: 'cancel', onPress: () => { } },
-                {
-                  text: "Sim",
-                  style: 'destructive',
-                  onPress: () => navigation.dispatch(e.data.action),
-                },
-              ]
-            );
-        });
+  useEffect(() => {
+    const beforeRemoveListener = navigation.addListener('beforeRemove', (e) => {
+      e.preventDefault();
+      Alert.alert(
+        'Deseja sair do app?',
+        undefined,
+        [
+          { text: 'Não', style: 'cancel', onPress: () => {} },
+          {
+            text: 'Sim',
+            style: 'destructive',
+            onPress: () => navigation.dispatch(e.data.action),
+          },
+        ]
+      );
     });
 
-
+    return () => {
+      navigation.removeListener('beforeRemove', beforeRemoveListener);
+    };
+  }, [navigation]);
 
   return (
     <View style={styles.container}>
+      <View style={[styles.row, styles.headerRow]}>
+        <View style={styles.circle}></View>
+        <View style={styles.headerTextContainer}>
+          <Text style={styles.headerText}>Hello,</Text>
+          <Text style={styles.headerText}>Name User</Text>
+        </View>
+      </View>
 
-      <View style={[styles.row, {width:'90%',justifyContent:'flex-start', marginTop:20,height:'8%'}]}>
+      <View style={styles.column}>
+        <View style={styles.row}>
+          <TouchableOpacity 
+            style={[styles.box, styles.boxBackground1]}
+            onPress={() => router.push('/createQuizz')}
+            accessibilityLabel="Create Quiz"
+          >
+           
+            <Text style={styles.linkText}>Create Quiz</Text>
+           
+          </TouchableOpacity>
 
-          <View style={styles.circle}></View>
-        <View style={[styles.collumn, {width:'60%', height:'100%',marginTop: 15}]}>
+          <TouchableOpacity style={[styles.box, styles.boxBackground2]}>
+            <Text style={styles.linkText}>Join Quiz</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.box, styles.boxBackground3]}>
+            <Text style={styles.linkText}>Achievements</Text>
+          </TouchableOpacity>
           
-
-          <Text style={[{textAlign:'left',width:'90%'}]}> Hello,  </Text>
-          <Text style={[{textAlign:'left', width:'90%'}]}> Name User</Text>
         </View>
-      </View>
-      
-
-      <View style={[styles.collumn]}>
-
-        <View style={styles.row}>
-          <View style={[styles.box, {backgroundColor: 'powderblue'}]}>
-          
-          </View>
-          <View style={[styles.box, {backgroundColor: 'skyblue'}]}>
-            <Text>Join Quiz</Text>
-
-          </View>
-          <View style={[styles.box, {backgroundColor: 'steelblue'}]}>
-            <Text>Achievements</Text>
-
-          </View>
-        </View>
-        <View style={[styles.boxRandom, {backgroundColor:'#aaf'}]}>
-            <Text>Random Quiz</Text>
-        </View>
-      </View>
-      
-      <View style={[styles.collumn, {height:'40%'}]}>
-        <Text style={[styles.text,{textAlign: 'left', width:'100%'}]}> Categories</Text>
-
-        <View style={[styles.row, {marginTop:-10}]}>
-          <View style={[styles.boxCategories, {backgroundColor: 'powderblue'}]}>
-          <Text>Tech</Text>
-
-          </View>
-          <View style={[styles.boxCategories, {backgroundColor: 'skyblue'}]}>
-          <Text>Entertainment</Text>
-
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={[styles.boxCategories, {backgroundColor: 'powderblue'}]}>
-          <Text>Science</Text>
-
-          </View>
-          <View style={[styles.boxCategories, {backgroundColor: 'skyblue'}]}>
-          <Text>Geography</Text>
-
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={[styles.boxCategories, {backgroundColor: 'powderblue'}]}>
-          <Text>History</Text>
-
-          </View>
-          <View style={[styles.boxCategories, {backgroundColor: 'skyblue'}]}>
-          <Text>Sports</Text>
-          </View>
-        </View>
-
-
-          <View style={[styles.boxSeeAll, {backgroundColor: 'skyblue'}]}>
-            <Text>See all</Text>
-          </View>
-
+        <TouchableOpacity style={[styles.boxRandom, styles.boxBackgroundRandom]}>
+          <Text style={styles.linkText}>Random Quiz</Text>
+        </TouchableOpacity>
       </View>
 
-
-
+      <View style={[styles.column, styles.categoriesContainer]}>
+        <Text style={[styles.text, styles.categoriesText]}>Categories</Text>
+        <View style={styles.categoriesGrid}>
+          {['Tech', 'Entertainment', 'Science', 'Geography', 'History', 'Sports'].map((category, index) => (
+            <View key={index} style={[styles.boxCategories, index % 2 === 0 ? styles.categoryBackground1 : styles.categoryBackground2]}>
+              <Text style={styles.linkText}>{category}</Text>
+            </View>
+          ))}
+        </View>
+        <TouchableOpacity style={[styles.boxSeeAll, styles.boxBackgroundSeeAll]}>
+          <Text style={styles.linkText}>See all</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-  )
+  );
 }
 
-
 const styles = StyleSheet.create({
-  container:{
-    flex:1,
+  container: {
+    flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
-  box:{
+  headerRow: {
+    width: '90%',
+    justifyContent: 'flex-start',
+    marginTop: 20,
+    height: '8%',
+  },
+  circle: {
+    width: 60,
+    height: 60,
+    borderRadius: 100,
+    backgroundColor: 'gray',
+  },
+  headerTextContainer: {
+    width: '60%',
+    height: '100%',
+    marginTop: 15,
+  },
+  headerText: {
+    textAlign: 'left',
+    width: '90%',
+  },
+  row: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  column: {
+    width: '90%',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    margin: 8,
+    alignItems: 'center',
+  },
+  box: {
     width: '30%',
     height: 137,
     borderRadius: 10,
-
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  boxRandom:{
+  boxRandom: {
     width: '100%',
     height: 151,
     marginTop: 20,
     borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  boxCategories:{
+  boxCategories: {
     width: '45%',
-    height:  64,
-    marginTop: 20,
+    height: 64,
+    margin: 5,
     borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  boxSeeAll:{
+  boxSeeAll: {
     width: '20%',
-    height:  30,
+    height: 30,
     marginTop: 5,
     borderRadius: 10,
-
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  circle:{
-    width:60,
-    height: 60,
-    borderRadius: 100,
-    backgroundColor: 'gray'
+  categoriesContainer: {
+    height: '40%',
   },
-  row:{
-    width:'100%',
-    //height:'30%',
+  categoriesGrid: {
     flexDirection: 'row',
-    //backgroundColor: '#aaa',
-    justifyContent:'space-between'
-  },
-  collumn:{
-    width: '90%',
-    height: '38%',
-    flexDirection: 'column',
     flexWrap: 'wrap',
-    margin: 8,
-    //backgroundColor: '#aaa',
-    alignItems:'center'
+    justifyContent: 'space-between',
   },
-  text:{
-    fontSize:18
-  }
-})
+  text: {
+    fontSize: 18,
+  },
+  linkText: {
+    color: '#05203C',
+    textAlign: 'center',
+  },
+  fullAreaLink: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  categoriesText: {
+    textAlign: 'left',
+    width: '100%',
+  },
+  boxBackground1: {
+    backgroundColor: 'powderblue',
+  },
+  boxBackground2: {
+    backgroundColor: 'skyblue',
+  },
+  boxBackground3: {
+    backgroundColor: 'steelblue',
+  },
+  boxBackgroundRandom: {
+    backgroundColor: '#aaf',
+  },
+  boxBackgroundSeeAll: {
+    backgroundColor: 'skyblue',
+  },
+  categoryBackground1: {
+    backgroundColor: 'powderblue',
+  },
+  categoryBackground2: {
+    backgroundColor: 'skyblue',
+  },
+});
