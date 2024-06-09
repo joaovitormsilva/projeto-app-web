@@ -22,22 +22,21 @@ export default function SquizzyScreen() {
       <Text style={styles.text}>Create an account to start squizzying!</Text>
 
 
-      <TouchableOpacity style={[styles.box, styles.BoxCreateAccount, {marginBottom: '10%', marginTop: '20%'}]}>
-        <Link href={"/CreateAccount"} style={[styles.text, {color:"#05203C"}]}>
-
-         Create Account
-         </Link>
-      </TouchableOpacity> 
+      <TouchableOpacity style={[styles.box, styles.BoxCreateAccount, { marginBottom: '10%', marginTop: '20%' }]}>
+        <Link href={"/CreateAccount"} style={styles.fullAreaLink}>
+            <Text style={[styles.text, { color: "#05203C" }]}>Create Account</Text>
+        </Link>
+      </TouchableOpacity>
 
       <Text style={styles.text}>Already have an account?</Text>
-     
+
       <TouchableOpacity style={[styles.box, styles.BoxSignIn]}>
-      
-        <Link href={"/SignIn"} style={[styles.text, {color:"#05203C"}]}> Sign In</Link>
-   
+        <Link href={"/SignIn"} style={styles.fullAreaLink}>
+           <Text style={[styles.text, { color: "#05203C" }]}>Sign In</Text>
+        </Link>
       </TouchableOpacity>
-     
-      
+
+
     </View>
   )
 }
@@ -70,10 +69,12 @@ const styles = StyleSheet.create({
   BoxSignIn:{
     backgroundColor:'#FFFFFF',
   },
-  fullAreaLink:{
-    width:'100%',
-    height: '100%',   
-    borderRadius: 8,
+  fullAreaLink: {
+      width: '100%',
+      height: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      display: 'flex'
   },
   reactLogo: {
     height: '40%',
