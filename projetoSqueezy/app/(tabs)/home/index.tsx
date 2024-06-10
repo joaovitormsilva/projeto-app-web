@@ -30,6 +30,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
+      
       <View style={[styles.row, styles.headerRow]}>
         <View style={styles.circle}></View>
         <View style={styles.headerTextContainer}>
@@ -40,6 +41,7 @@ export default function HomeScreen() {
 
       <View style={styles.column}>
         <View style={styles.row}>
+
           <TouchableOpacity 
             style={[styles.box, styles.boxBackground1]}
             onPress={() => router.push('/createQuizz')}

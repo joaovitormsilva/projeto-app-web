@@ -51,7 +51,6 @@ export default function CreateAccountScreen() {
           secureTextEntry={false}
         />
 
-<<<<<<< HEAD
         <Text style={styles.labelText}>Password</Text>
         <TextInput
           style={styles.input}
@@ -67,15 +66,6 @@ export default function CreateAccountScreen() {
       </SafeAreaView>
     </View>
   );
-=======
-        <Text>User</Text>
-        
-        <Link href="/createQuizz" style={{backgroundColor:"yellow"}}>Create quizz BOTÃO </Link>
-        <Button title="Ir pra home" onPress={limparNavegacao}/>
-      
-      </View>
-  )
->>>>>>> 4b252bb2dde39eb8d7870f1b96c3561631c87230
 }
 
 const styles = StyleSheet.create({

@@ -11,6 +11,7 @@ export default function Layout() {
     screenOptions={{
       tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
       headerShown: false,
+      headerShadowVisible: false
      }}>
       <Tabs.Screen name="home/index" options={{title:'home',
         headerShown: false,
