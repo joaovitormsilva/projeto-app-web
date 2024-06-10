@@ -14,13 +14,15 @@ export default function CreateAccountScreen() {
     Poppins_900Black_Italic,
   });
 
+  if (!fontsLoaded) {
+    return <ActivityIndicator size="large" color="#0000ff" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />;
+  }
+
+
   function limparNavegacao() {
     router.replace("/home");
   }
 
-  if (!fontsLoaded) {
-    return <ActivityIndicator size="large" color="#0000ff" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />;
-  }
 
   return (
     <View style={styles.container}>
@@ -61,7 +63,7 @@ export default function CreateAccountScreen() {
         />
 
         <TouchableOpacity style={styles.button} onPress={limparNavegacao}>
-          <Text style={styles.buttonText}>Sign up with email</Text>
+          <Text style={styles.buttonText}>Sign up</Text>
         </TouchableOpacity>
       </SafeAreaView>
     </View>
