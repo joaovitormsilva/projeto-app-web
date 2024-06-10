@@ -5,10 +5,17 @@ export default function LayoutCreate() {
 
 
   return (
-    <Stack screenOptions={
+    <Stack 
+
+    screenOptions={
         {
+            headerStyle:{
+              backgroundColor:'#F8FAF4'
+            },
+            headerShadowVisible:false,
             headerTitleAlign:'center'
         }
+        
     }>
       <Stack.Screen name="index" options={{title:"Create Quiz", headerShown: true}}/>
 
