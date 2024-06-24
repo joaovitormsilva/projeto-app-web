@@ -1,7 +1,7 @@
 import {Stack} from "expo-router"
 
 
-export default function LayoutCreate() {
+export default function LayoutFinishQuestions() {
 
 
   return (
@@ -17,8 +17,8 @@ export default function LayoutCreate() {
         }
         
     }>
-      <Stack.Screen name="index" options={{title:"Create Quiz", headerShown: true}}/>
-     
+      <Stack.Screen name="index" options={{title:"Finish Questions", headerShown: true}}/>
+
       </Stack>
   )
 }

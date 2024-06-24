@@ -1,9 +1,11 @@
 import { Image, View, Text, StyleSheet, Button, SafeAreaView, TextInput, ActivityIndicator, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
-import { Link, router } from "expo-router";
+import { useRouter } from 'expo-router';
 import { useFonts, Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic } from '@expo-google-fonts/poppins';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function CreateAccountScreen() {
+  const router = useRouter();
   const [user, setUser] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,19 +20,24 @@ export default function CreateAccountScreen() {
     return <ActivityIndicator size="large" color="#0000ff" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />;
   }
 
+  const saveUserData = async () => {
+    const userData = {
+      user,
+      email,
+      password,
+    };
 
-  function limparNavegacao() {
-    router.replace("/home");
-  }
-
+    try {
+      await AsyncStorage.setItem('user', JSON.stringify(userData));
+      router.replace("/home");
+    } catch (error) {
+      console.error('Failed to save user data', error);
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <Image
-        source={require('../../assets/images/SquizzyLogo2.png')}
-        style={styles.reactLogo}
-      />
-
+      <Image source={require('../../assets/images/SquizzyLogo2.png')} style={styles.reactLogo} />
       <Text style={styles.headerText}>Create an account</Text>
       <Text style={styles.subHeaderText}>Enter your email to sign up for this app</Text>
 
@@ -43,7 +50,6 @@ export default function CreateAccountScreen() {
           placeholder="Enter your username"
           secureTextEntry={false}
         />
-
         <Text style={styles.labelText}>Email</Text>
         <TextInput
           style={styles.input}
@@ -52,7 +58,6 @@ export default function CreateAccountScreen() {
           placeholder="email@domain.com"
           secureTextEntry={false}
         />
-
         <Text style={styles.labelText}>Password</Text>
         <TextInput
           style={styles.input}
@@ -61,8 +66,7 @@ export default function CreateAccountScreen() {
           placeholder="Enter your password"
           secureTextEntry={true}
         />
-
-        <TouchableOpacity style={styles.button} onPress={limparNavegacao}>
+        <TouchableOpacity style={styles.button} onPress={saveUserData}>
           <Text style={styles.buttonText}>Sign up</Text>
         </TouchableOpacity>
       </SafeAreaView>
@@ -92,7 +96,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     borderColor: '#E0E0E0',
-    color: '#828282'
+    color: '#828282',
   },
   headerText: {
     color: '#000',
@@ -112,16 +116,15 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins_300Light',
   },
   button: {
-      backgroundColor: '#05203C', // Cor do botão
-      padding: 10,
-      borderRadius: 10,
-      alignItems: 'center',
-      marginTop: 20,
+    backgroundColor: '#05203C', // Cor do botão
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 20,
   },
   buttonText: {
-      color: '#fff', // Cor do texto do botão
-      fontSize: 14,
-      fontFamily: 'Poppins_300Light',
+    color: '#fff', // Cor do texto do botão
+    fontSize: 14,
+    fontFamily: 'Poppins_300Light',
   },
-
 });

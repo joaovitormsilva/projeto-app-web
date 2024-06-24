@@ -61,6 +61,14 @@ export default function CreateQuizScreen() {
     }
   };
 
+  const handleConfirm = () => {
+    // Navegar para a tela de criação de perguntas com o número de questões como parâmetro
+    router.push({
+      pathname: '../createQuestions',
+      params: { numQuestions: numQuestions },
+    });
+  };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={[styles.boxSetQuiz]} onPress={pickImage}>
@@ -82,7 +90,6 @@ export default function CreateQuizScreen() {
 
       {saving && <ActivityIndicator size="large" color="#FCC307" />}
 
-
       <Text style={styles.text}>Quiz Name</Text>
       <TextInput
         style={styles.input}
@@ -101,42 +108,44 @@ export default function CreateQuizScreen() {
         multiline={true}
         maxLength={100}
       />
+      <Text style={styles.counterText}>{descriptionText.length}/100</Text>
 
       <Text style={styles.text}>Quiz Category</Text>
-     
-        <Picker
-          selectedValue={category}
-          style={styles.picker}
-          onValueChange={(itemValue) => setCategory(itemValue)}
-        >
-          <Picker.Item label="Category 1" value="category1" />
-          <Picker.Item label="Category 2" value="category2" />
-          <Picker.Item label="Category 3" value="category3" />
-        </Picker>
+      <Picker
+        selectedValue={category}
+        style={[styles.picker, styles.borderOnly]}
+        onValueChange={(itemValue) => setCategory(itemValue)}
+      >
+        <Picker.Item label="Category 1" value="category1" />
+        <Picker.Item label="Category 2" value="category2" />
+        <Picker.Item label="Category 3" value="category3" />
+      </Picker>
 
       <Text style={styles.text}>Number of Questions</Text>
-  
       <Picker
         selectedValue={numQuestions}
-        style={[styles.picker]}
+        style={[styles.picker, styles.borderOnly]}
         onValueChange={(itemValue) => setNumQuestions(itemValue)}
-        >
+      >
         <Picker.Item label="5" value="5" />
         <Picker.Item label="10" value="10" />
         <Picker.Item label="15" value="15" />
       </Picker>
 
       <Text style={styles.text}>Quiz Duration</Text>
-      
-        <Picker
-          selectedValue={duration}
-          style={styles.picker}
-          onValueChange={(itemValue) => setDuration(itemValue)}
-          >
-          <Picker.Item label="5 minutes" value="5" />
-          <Picker.Item label="10 minutes" value="10" />
-          <Picker.Item label="15 minutes" value="15" />
-        </Picker>
+      <Picker
+        selectedValue={duration}
+        style={[styles.picker, styles.borderOnly]}
+        onValueChange={(itemValue) => setDuration(itemValue)}
+      >
+        <Picker.Item label="5 minutes" value="5" />
+        <Picker.Item label="10 minutes" value="10" />
+        <Picker.Item label="15 minutes" value="15" />
+      </Picker>
+
+      <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
+        <Text style={styles.confirmButtonText}>Confirmar</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -171,16 +180,9 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
   },
   row: {
-    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  column: {
     width: '90%',
-    flexDirection: 'column',
-    flexWrap: 'wrap',
-    margin: 8,
-    alignItems: 'center',
   },
   textThumbnail: {
     color: 'white',
@@ -188,7 +190,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor:'#F8FAF4',
+    backgroundColor: '#F8FAF4',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -197,7 +199,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Poppins_300Light',
     textAlign: 'left',
-    width:'90%'
+    width: '90%',
   },
   input: {
     width: '90%',
@@ -213,11 +215,36 @@ const styles = StyleSheet.create({
     width: '90%',
     marginBottom: 20,
   },
-  
+  borderOnly: {
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 8,
+  },
   successMessage: {
     color: '#00FF00',
     fontSize: 16,
     marginVertical: 10,
+    fontFamily: 'Poppins_300Light',
+  },
+  counterText: {
+    width: '90%',
+    textAlign: 'right',
+    color: '#aaa',
+    fontSize: 12,
+    marginBottom: 10,
+  },
+  confirmButton: {
+    width: '90%',
+    height: 50,
+    borderRadius: 8,
+    margin: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#05203C',
+  },
+  confirmButtonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
     fontFamily: 'Poppins_300Light',
   },
 });

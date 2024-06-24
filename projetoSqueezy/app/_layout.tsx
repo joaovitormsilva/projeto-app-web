@@ -15,6 +15,10 @@ export default function RootLayout() {
       <Stack.Screen name="CreateAccount/index" options={{title:"Create Account", headerShown: false}}/>
       <Stack.Screen name="(tabs)" options={{headerShown:false}}/>
       <Stack.Screen name="createQuizz" options={{title:'Create Quiz', headerShown:false}}/>
-    </Stack>
+      <Stack.Screen name="createQuestions" options={{title:'Create Questions', headerShown:false}}/>
+      <Stack.Screen name="finishQuiz" options={{title:'Finish Quiz', headerShown:false}}/>
+
+ 
+   </Stack>
   )
 }
