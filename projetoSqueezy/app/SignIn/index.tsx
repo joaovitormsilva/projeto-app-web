@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator, Alert, SafeAreaView } from 'react-native';
+import { View, Image, Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator, Alert, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFonts, Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic } from '@expo-google-fonts/poppins';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -48,6 +48,8 @@ export default function SignInScreen() {
 
   return (
     <View style={styles.container}>
+      <Image source={require('../../assets/images/SquizzyLogo2.png')} style={styles.reactLogo} />
+      
       <Text style={styles.headerText}>Sign In</Text>
       <SafeAreaView style={styles.inputFields}>
         <Text style={styles.labelText}>Email</Text>
@@ -97,6 +99,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: '#E0E0E0',
     color: '#828282',
+  },
+  reactLogo: {
+    height: '30%',
+    width: '50%',
   },
   headerText: {
     color: '#000',
