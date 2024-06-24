@@ -1,10 +1,13 @@
-import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
-import React, { useEffect } from 'react';
-import { useNavigation, Link, useRouter } from 'expo-router';
+import { View, Text, StyleSheet, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { useNavigation, useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
   const router = useRouter();
+  const [userName, setUserName] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const beforeRemoveListener = navigation.addListener('beforeRemove', (e) => {
@@ -23,33 +26,53 @@ export default function HomeScreen() {
       );
     });
 
+    const fetchUserData = async () => {
+      try {
+        const userDataJson = await AsyncStorage.getItem('user');
+        if (userDataJson) {
+          const userData = JSON.parse(userDataJson);
+          setUserName(userData.user);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+
     return () => {
       navigation.removeListener('beforeRemove', beforeRemoveListener);
     };
   }, [navigation]);
 
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
   return (
     <View style={styles.container}>
-      
       <View style={[styles.row, styles.headerRow]}>
+
         <View style={styles.circle}></View>
-        <View style={styles.headerTextContainer}>
+
+        <View style={[styles.headerTextContainer, {marginLeft:10}]}>
+
           <Text style={styles.headerText}>Hello,</Text>
-          <Text style={styles.headerText}>Name User</Text>
+          <Text style={styles.headerText}>{userName}</Text>
+          
         </View>
       </View>
 
       <View style={styles.column}>
         <View style={styles.row}>
-
           <TouchableOpacity 
             style={[styles.box, styles.boxBackground1]}
             onPress={() => router.push('/createQuizz')}
             accessibilityLabel="Create Quiz"
           >
-           
             <Text style={styles.linkText}>Create Quiz</Text>
-           
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.box, styles.boxBackground2]}>
@@ -59,7 +82,6 @@ export default function HomeScreen() {
           <TouchableOpacity style={[styles.box, styles.boxBackground3]}>
             <Text style={styles.linkText}>Achievements</Text>
           </TouchableOpacity>
-          
         </View>
         <TouchableOpacity style={[styles.boxRandom, styles.boxBackgroundRandom]}>
           <Text style={styles.linkText}>Random Quiz</Text>

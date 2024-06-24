@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Definindo a interface para os dados do usuário
@@ -33,9 +33,28 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText}>Profile</Text>
-      <Text style={styles.labelText}>Username: {userData.user}</Text>
-      <Text style={styles.labelText}>Email: {userData.email}</Text>
+
+      <View style={styles.column}>
+
+        <View style={styles.circle}></View>
+      
+        <Text style={styles.labelText}>{userData.user}</Text>
+
+        <View style={styles.row}>
+
+          <Text style={styles.labelText}>Your Quizzes</Text>
+
+          <TouchableOpacity style={[styles.box, styles.boxBackgroundYellow]}>
+            <Text >Manage quizzes</Text>
+          </TouchableOpacity>
+         
+        </View>
+
+
+      </View>
+
+     
+
     </View>
   );
 }
@@ -58,5 +77,33 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Poppins_300Light',
     marginBottom: 10,
+  },
+  circle: {
+    width: 110,
+    height: 110,
+    borderRadius: 100,
+    backgroundColor: 'gray',
+  },
+  row: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  column: {
+    width: '90%',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    margin: 8,
+    alignItems: 'center',
+  },
+  box: {
+    width: '32%',
+    height: 35,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  boxBackgroundYellow: {
+    backgroundColor: '#FCC307',
   },
 });

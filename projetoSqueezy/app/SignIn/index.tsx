@@ -50,7 +50,8 @@ export default function SignInScreen() {
     <View style={styles.container}>
       <Image source={require('../../assets/images/SquizzyLogo2.png')} style={styles.reactLogo} />
       
-      <Text style={styles.headerText}>Sign In</Text>
+      <Text style={styles.headerText}>Sign in to your account</Text>
+      <Text style={{marginBottom:25}}>Enter your email and password to sign in</Text>
       <SafeAreaView style={styles.inputFields}>
         <Text style={styles.labelText}>Email</Text>
         <TextInput
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 18,
     fontFamily: 'Poppins_300Light',
-    marginTop: '2%',
+
   },
   labelText: {
     color: '#000',
