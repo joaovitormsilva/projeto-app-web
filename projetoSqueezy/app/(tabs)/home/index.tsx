@@ -2,6 +2,8 @@ import { View, Text, StyleSheet, Alert, TouchableOpacity, ActivityIndicator } fr
 import React, { useEffect, useState } from 'react';
 import { useNavigation, useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CommonActions } from '@react-navigation/native';
+
 
 export default function HomeScreen() {
   const navigation = useNavigation();

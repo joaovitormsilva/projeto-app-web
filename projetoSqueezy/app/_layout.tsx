@@ -11,18 +11,16 @@ export default function RootLayout() {
     <UserProvider>
       <QuizProvider>
 
-        <Stack 
+        <Stack    initialRouteName="telaInicial/index"
           screenOptions={{
             headerTitleAlign:'center'
           }}
           >
           <Stack.Screen name="index" options={{title:"Squizzy", headerShown: false}}/>
-          <Stack.Screen name="SignIn/index" options={{title:"Log in app", headerShown: false}}/>
-          <Stack.Screen name="CreateAccount/index" options={{title:"Create Account", headerShown: false}}/>
-          <Stack.Screen name="(tabs)" options={{headerShown:false}}/>
-          <Stack.Screen name="createQuizz" options={{title:'Create Quiz', headerShown:false}}/>
-          <Stack.Screen name="createQuestions" options={{title:'Create Questions', headerShown:false}}/>
-          <Stack.Screen name="finishQuiz" options={{title:'Finish Quiz', headerShown:false}}/>
+          <Stack.Screen name="SignIn/index" options={{title:"SignIn", headerShown: false}}/>
+          <Stack.Screen name="CreateAccount/index" options={{title:"Create account", headerShown: false}}/>
+          <Stack.Screen name="(tabs)" options={{title:"Create account", headerShown: false}}/>
+          <Stack.Screen name="createQuizz" options={{title:"Create Quiz", headerShown: false}}/>
 
     
       </Stack>

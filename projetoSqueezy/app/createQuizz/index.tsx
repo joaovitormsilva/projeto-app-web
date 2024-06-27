@@ -78,7 +78,7 @@ export default function CreateQuizScreen() {
 
     saveQuiz(newQuiz);
 
-    router.push({
+    router.replace({
       pathname: '../createQuestions',
       params: { numQuestions },
     });

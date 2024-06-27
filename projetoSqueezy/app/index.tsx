@@ -1,76 +1,30 @@
 import React from 'react';
-import { Image, View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useFonts, Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic } from '@expo-google-fonts/poppins';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import HomeScreen from './(tabs)/home';
+import CreateQuizScreen from './createQuizz';
+import ProfileScreen from './(tabs)/profile';
+import SquizzyScreen from './telaInicial';
+import CreateAccountScreen from './CreateAccount';
+import SignInScreen from './SignIn';
+import { UserProvider } from '../scripts/UserContext';
+import { QuizProvider } from '../scripts/QuizContext';
 
-export default function SquizzyScreen() {
-  const router = useRouter();
-  let [fontsLoaded] = useFonts({ Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic });
+const Stack = createNativeStackNavigator();
 
-  if (!fontsLoaded) {
-    return <ActivityIndicator size="large" color="#FCC307" />;
-  }
-
+export default function App() {
   return (
-    <View style={styles.container}>
-      <Image source={require('../assets/images/SquizzyLogo3.png')} style={styles.reactLogo} />
-   <Text style={styles.text}>Your favorite quiz app</Text>
-      <Text style={styles.text}>Create an account to start squizzying!</Text>
-
-      <TouchableOpacity
-        style={[styles.box, styles.boxCreateAccount, { marginBottom: '10%', marginTop: '20%' }]}
-        onPress={() => router.push('/CreateAccount')}
-        accessibilityLabel="Create Account"
-      >
-        <Text style={[styles.text, styles.linkText]}>Create Account</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.text}>Already have an account?</Text>
-
-      <TouchableOpacity
-        style={[styles.box, styles.boxSignIn]}
-        onPress={() => router.push('/SignIn')}
-        accessibilityLabel="Sign In"
-      >
-        <Text style={[styles.text, styles.linkText]}>Sign In</Text>
-      </TouchableOpacity>
-    </View>
+      <UserProvider>
+        <QuizProvider>
+          <Stack.Navigator initialRouteName="telaInicial/Index">
+            <Stack.Screen name="telaInicial" component={SquizzyScreen} options={{title:"Squizzy", headerShown: false}}/>
+            <Stack.Screen name="home" component={HomeScreen} options={{title:"home", headerShown: true}}/>
+            <Stack.Screen name="createQuizz" component={CreateQuizScreen} options={{title:"create quiz", headerShown: true}} />
+            <Stack.Screen name="profile" component={ProfileScreen} options={{title:"profile", headerShown: true}} />
+            <Stack.Screen name="createAccount" component={CreateAccountScreen} options={{title:"Create Account", headerShown: true}} />
+            <Stack.Screen name="SignIn" component={SignInScreen} options={{title:"SignIn", headerShown: true}} />
+          </Stack.Navigator>
+        </QuizProvider>
+      </UserProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  box: {
-    width: '65%',
-    height: 50, // Ajuste a altura conforme necessário
-    borderRadius: 8,
-    margin: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#05203C',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    color: '#fff',
-    fontSize: 18,
-    fontFamily: 'Poppins_300Light',
-    textAlign: 'center',
-  },
-  linkText: {
-    color: '#05203C',
-  },
-  boxCreateAccount: {
-    backgroundColor: '#FCC307',
-  },
-  boxSignIn: {
-    backgroundColor: '#FFFFFF',
-  },
-  reactLogo: {
-    height: '40%',
-    width: '70%',
-    resizeMode: 'contain',
-  },
-});

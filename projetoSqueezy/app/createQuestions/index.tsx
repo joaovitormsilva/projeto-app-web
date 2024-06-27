@@ -46,7 +46,7 @@ export default function CreateQuestionsScreen() {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       // Navegar para a tela de conclusão do quiz
-      router.push('/finishQuiz');
+      router.replace('/finishQuiz');
     }
   };
 
