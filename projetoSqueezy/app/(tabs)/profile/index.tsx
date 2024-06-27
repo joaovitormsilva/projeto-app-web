@@ -1,63 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-// Definindo a interface para os dados do usuário
-interface UserData {
-  user: string;
-  email: string;
-  password: string;
-}
+import { useUser } from '../../../scripts/UserContext'; // Certifique-se de que o caminho do import está correto
+import { useQuiz } from '../../../scripts/QuizContext'; // Certifique-se de que o caminho do import está correto
 
 export default function ProfileScreen() {
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const { user } = useUser(); // Acessando o usuário através do contexto
+  const { quizzes } = useQuiz(); // Acessando quizzes através do contexto
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const user = await AsyncStorage.getItem('user');
-        if (user !== null) {
-          setUserData(JSON.parse(user));
-        }
-      } catch (error) {
-        console.error('Failed to load user data', error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
-
-  if (!userData) {
+  if (!user) {
     return <ActivityIndicator size="large" color="#0000ff" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />;
   }
 
   return (
     <View style={styles.container}>
-
       <View style={styles.column}>
-
         <View style={styles.circle}></View>
-      
-        <Text style={styles.labelText}>{userData.user}</Text>
-
+        <Text style={styles.labelText}>{user.email}</Text> {/* Exemplo de acesso a dados do usuário */}
         <View style={styles.row}>
-
           <Text style={styles.labelText}>Your Quizzes</Text>
-
-          <TouchableOpacity style={[styles.box, styles.boxBackgroundYellow]}>
-            <Text >Manage quizzes</Text>
-          </TouchableOpacity>
-         
+          {quizzes.map((quiz: { id: React.Key | null | undefined; name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }) => (
+            <TouchableOpacity
+              key={quiz.id}
+              style={[styles.box, styles.boxBackgroundYellow]}
+              onPress={() => {
+                // Adicione aqui a navegação para a tela de gerenciamento do quiz específico
+              }}
+            >
+              <Text>{quiz.name}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
-
-
       </View>
-
-     
-
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

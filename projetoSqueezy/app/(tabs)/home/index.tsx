@@ -31,7 +31,7 @@ export default function HomeScreen() {
         const userDataJson = await AsyncStorage.getItem('user');
         if (userDataJson) {
           const userData = JSON.parse(userDataJson);
-          setUserName(userData.user);
+          setUserName(userData.username); // Certifique-se de acessar o nome do usuário corretamente
         }
       } catch (error) {
         console.error('Failed to fetch user data', error);
@@ -54,20 +54,17 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <View style={[styles.row, styles.headerRow]}>
-
         <View style={styles.circle}></View>
 
-        <View style={[styles.headerTextContainer, {marginLeft:10}]}>
-
+        <View style={[styles.headerTextContainer, { marginLeft: 10 }]}>
           <Text style={styles.headerText}>Hello,</Text>
           <Text style={styles.headerText}>{userName}</Text>
-          
         </View>
       </View>
 
       <View style={styles.column}>
         <View style={styles.row}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.box, styles.boxBackground1]}
             onPress={() => router.push('/createQuizz')}
             accessibilityLabel="Create Quiz"
@@ -104,6 +101,7 @@ export default function HomeScreen() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

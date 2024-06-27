@@ -26,14 +26,10 @@ export default function SignInScreen() {
       const userDataJson = await AsyncStorage.getItem('user');
       if (userDataJson) {
         const userData = JSON.parse(userDataJson);
-        if (userData.email === email) {
-          if (userData.password === password) {
-            router.replace("/home");
-          } else {
-            Alert.alert("Invalid Credentials", "The password you entered is incorrect.");
-          }
+        if (userData.email === email && userData.password === password) { // Verifique se a senha está correta
+          router.replace("/home");
         } else {
-          Alert.alert("Email Not Found", "No account found with this email.");
+          Alert.alert("Invalid Credentials", "The email or password you entered is incorrect.");
         }
       } else {
         Alert.alert("No Users", "No user data found.");
@@ -80,6 +76,7 @@ export default function SignInScreen() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

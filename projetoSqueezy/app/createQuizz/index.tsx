@@ -5,16 +5,20 @@ import { useFonts, Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic } 
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { Picker } from '@react-native-picker/picker';
+import uuid from 'react-native-uuid';
+import { useQuiz } from '../../scripts/QuizContext'; // Certifique-se de que o caminho do import está correto
 
 export default function CreateQuizScreen() {
   const router = useRouter();
-  const [inputText, setInputText] = useState<string>('');
-  const [descriptionText, setDescriptionText] = useState<string>('');
-  const [category, setCategory] = useState<string>('');
-  const [numQuestions, setNumQuestions] = useState<string>('5');
-  const [duration, setDuration] = useState<string>('5');
+  const [inputText, setInputText] = useState('');
+  const [descriptionText, setDescriptionText] = useState('');
+  const [category, setCategory] = useState('');
+  const [numQuestions, setNumQuestions] = useState('5');
+  const [duration, setDuration] = useState('5');
   const [image, setImage] = useState<string | null>(null);
-  const [saving, setSaving] = useState<boolean>(false);
+  const [saving, setSaving] = useState(false);
+  const { saveQuiz } = useQuiz();
+
   let [fontsLoaded] = useFonts({ Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic });
 
   if (!fontsLoaded) {
@@ -62,10 +66,21 @@ export default function CreateQuizScreen() {
   };
 
   const handleConfirm = () => {
-    // Navegar para a tela de criação de perguntas com o número de questões como parâmetro
+    const newQuiz = {
+      id: uuid.v4(),
+      name: inputText,
+      description: descriptionText,
+      category,
+      numQuestions,
+      duration,
+      imageUri: image || undefined,
+    };
+
+    saveQuiz(newQuiz);
+
     router.push({
       pathname: '../createQuestions',
-      params: { numQuestions: numQuestions },
+      params: { numQuestions },
     });
   };
 
@@ -105,7 +120,7 @@ export default function CreateQuizScreen() {
         onChangeText={setDescriptionText}
         placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sodales diam ac tincidunt malesuada. In hac habitasse platea dictumst."
         placeholderTextColor="#aaa"
-        multiline={true}
+        multiline
         maxLength={100}
       />
       <Text style={styles.counterText}>{descriptionText.length}/100</Text>

@@ -3,12 +3,20 @@ import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { useFonts, Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic } from '@expo-google-fonts/poppins';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useContext } from 'react';
+import { UserContext, useUser } from '../../scripts/UserContext';
 
 export default function CreateAccountScreen() {
+  const { setUser } = useUser(); // Certifique-se de acessar setUser corretamente
+
   const router = useRouter();
-  const [user, setUser] = useState('');
+  const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const handleUserChange = (text: React.SetStateAction<string>) => setUserName(text);
+  const handleEmailChange = (text: React.SetStateAction<string>) => setEmail(text);
+  const handlePasswordChange = (text: React.SetStateAction<string>) => setPassword(text);
 
   let [fontsLoaded] = useFonts({
     Poppins_100Thin,
@@ -22,13 +30,16 @@ export default function CreateAccountScreen() {
 
   const saveUserData = async () => {
     const userData = {
-      user,
+      id: '1', // Adicione um ID único aqui
+      username: userName, // Certifique-se de armazenar o nome do usuário
       email,
-      password,
+      password, // Armazene a senha
+      quizzes: [],
     };
-
+  
     try {
       await AsyncStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData); // Utilize setUser para atualizar o contexto
       router.replace("/home");
     } catch (error) {
       console.error('Failed to save user data', error);
@@ -45,15 +56,15 @@ export default function CreateAccountScreen() {
         <Text style={styles.labelText}>User</Text>
         <TextInput
           style={styles.input}
-          onChangeText={setUser}
-          value={user}
+          onChangeText={handleUserChange}
+          value={userName}
           placeholder="Enter your username"
           secureTextEntry={false}
         />
         <Text style={styles.labelText}>Email</Text>
         <TextInput
           style={styles.input}
-          onChangeText={setEmail}
+          onChangeText={handleEmailChange}
           value={email}
           placeholder="email@domain.com"
           secureTextEntry={false}
@@ -61,7 +72,7 @@ export default function CreateAccountScreen() {
         <Text style={styles.labelText}>Password</Text>
         <TextInput
           style={styles.input}
-          onChangeText={setPassword}
+          onChangeText={handlePasswordChange}
           value={password}
           placeholder="Enter your password"
           secureTextEntry={true}
@@ -73,6 +84,8 @@ export default function CreateAccountScreen() {
     </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
