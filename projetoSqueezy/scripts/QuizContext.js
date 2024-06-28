@@ -20,9 +20,10 @@ export const QuizProvider = ({ children }) => {
     loadQuizzes();
   }, []);
 
-  const saveQuiz = async (quiz) => {
+  const saveQuiz = async (quiz, userId) => {
     try {
-      const newQuizzes = [...quizzes, quiz];
+      const newQuiz = { ...quiz, userId };
+      const newQuizzes = [...quizzes, newQuiz];
       setQuizzes(newQuizzes);
       await AsyncStorage.setItem('quizzes', JSON.stringify(newQuizzes));
     } catch (error) {

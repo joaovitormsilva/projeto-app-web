@@ -7,6 +7,7 @@ import * as FileSystem from 'expo-file-system';
 import { Picker } from '@react-native-picker/picker';
 import uuid from 'react-native-uuid';
 import { useQuiz } from '../../scripts/QuizContext'; // Certifique-se de que o caminho do import está correto
+import { useUser } from '../../scripts/UserContext'; // Certifique-se de que o caminho do import está correto
 
 export default function CreateQuizScreen() {
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function CreateQuizScreen() {
   const [image, setImage] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const { saveQuiz } = useQuiz();
+  const { user } = useUser(); // Obtenha o usuário atual
 
   let [fontsLoaded] = useFonts({ Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic });
 
@@ -76,7 +78,9 @@ export default function CreateQuizScreen() {
       imageUri: image || undefined,
     };
 
-    saveQuiz(newQuiz);
+    if (user) {
+      saveQuiz(newQuiz, user.id); // Passe o userId ao salvar o quiz
+    }
 
     router.replace({
       pathname: '../createQuestions',

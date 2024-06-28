@@ -1,10 +1,9 @@
-import { Image, View, Text, StyleSheet, Button, SafeAreaView, TextInput, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { Image, View, Text, StyleSheet, ActivityIndicator, SafeAreaView, TextInput, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { useFonts, Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic } from '@expo-google-fonts/poppins';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useContext } from 'react';
-import { UserContext, useUser } from '../../scripts/UserContext';
+import { useUser } from '../../scripts/UserContext'; // Certifique-se de que o caminho está correto
 
 export default function CreateAccountScreen() {
   const { setUser } = useUser(); // Certifique-se de acessar setUser corretamente
@@ -25,7 +24,7 @@ export default function CreateAccountScreen() {
   });
 
   if (!fontsLoaded) {
-    return <ActivityIndicator size="large" color="#0000ff" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />;
+    return <ActivityIndicator size="large" color="#0000ff" style={styles.loading} />;
   }
 
   const saveUserData = async () => {
@@ -36,7 +35,7 @@ export default function CreateAccountScreen() {
       password, // Armazene a senha
       quizzes: [],
     };
-  
+
     try {
       await AsyncStorage.setItem('user', JSON.stringify(userData));
       setUser(userData); // Utilize setUser para atualizar o contexto
@@ -84,7 +83,6 @@ export default function CreateAccountScreen() {
     </View>
   );
 }
-
 
 
 const styles = StyleSheet.create({
@@ -139,5 +137,10 @@ const styles = StyleSheet.create({
     color: '#fff', // Cor do texto do botão
     fontSize: 14,
     fontFamily: 'Poppins_300Light',
+  },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
