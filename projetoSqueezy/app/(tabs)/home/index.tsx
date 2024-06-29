@@ -96,8 +96,12 @@ export default function HomeScreen() {
             </View>
           ))}
         </View>
-        <TouchableOpacity style={[styles.boxSeeAll, styles.boxBackgroundSeeAll]}>
+        <TouchableOpacity style={[styles.boxSeeAll, styles.boxBackgroundSeeAll]}
+        onPress={() => router.push('/categories')}
+        accessibilityLabel="Quiz Categories"
+        >
           <Text style={styles.linkText}>See all</Text>
+
         </TouchableOpacity>
       </View>
     </View>

@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './(tabs)/home';
 import CreateQuizScreen from './createQuizz';
+import CategoriesScreen from './categories'
 import ProfileScreen from './(tabs)/profile';
 import SquizzyScreen from './telaInicial';
 import CreateAccountScreen from './CreateAccount';
@@ -20,6 +21,7 @@ export default function App() {
             <Stack.Screen name="telaInicial" component={SquizzyScreen} options={{title:"Squizzy", headerShown: false}}/>
             <Stack.Screen name="home" component={HomeScreen} options={{title:"home", headerShown: true}}/>
             <Stack.Screen name="createQuizz" component={CreateQuizScreen} options={{title:"create quiz", headerShown: true}} />
+            <Stack.Screen name="categories" component={CategoriesScreen} options={{title:"categories", headerShown: true}} />
             <Stack.Screen name="profile" component={ProfileScreen} options={{title:"profile", headerShown: true}} />
             <Stack.Screen name="createAccount" component={CreateAccountScreen} options={{title:"Create Account", headerShown: true}} />
             <Stack.Screen name="SignIn" component={SignInScreen} options={{title:"SignIn", headerShown: true}} />
