@@ -11,6 +11,15 @@ export default function HomeScreen() {
   const [userName, setUserName] = useState('');
   const [loading, setLoading] = useState(true);
 
+  const categories = [
+    { name: 'Tech', route: '/categories/tech' },
+    { name: 'Entertainment', route: '/categories/entertainment' },
+    { name: 'Science', route: '/categories/science' },
+    { name: 'Geography', route: '/categories/geography' },
+    { name: 'History', route: '/categories/history' },
+    { name: 'Sports', route: '/categories/sports' },
+  ];
+
   useEffect(() => {
     const beforeRemoveListener = navigation.addListener('beforeRemove', (e) => {
       e.preventDefault();
@@ -87,23 +96,27 @@ export default function HomeScreen() {
         </TouchableOpacity>
       </View>
 
-      <View style={[styles.column, styles.categoriesContainer]}>
-        <Text style={[styles.text, styles.categoriesText]}>Categories</Text>
-        <View style={styles.categoriesGrid}>
-          {['Tech', 'Entertainment', 'Science', 'Geography', 'History', 'Sports'].map((category, index) => (
-            <View key={index} style={[styles.boxCategories, index % 2 === 0 ? styles.categoryBackground1 : styles.categoryBackground2]}>
-              <Text style={styles.linkText}>{category}</Text>
-            </View>
-          ))}
+    <View style={[styles.column, styles.categoriesContainer]}>
+          <Text style={[styles.text, styles.categoriesText]}>Categories</Text>
+          <View style={styles.categoriesGrid}>
+            {categories.map((category, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[styles.boxCategories, index % 2 === 0 ? styles.categoryBackground1 : styles.categoryBackground2]}
+                onPress={() => router.push(category.route)}
+              >
+                <Text style={styles.linkText}>{category.name}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <TouchableOpacity
+            style={[styles.boxSeeAll, styles.boxBackgroundSeeAll]}
+            onPress={() => router.push('/categories')}
+            accessibilityLabel="Quiz Categories"
+          >
+            <Text style={styles.linkText}>See all</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={[styles.boxSeeAll, styles.boxBackgroundSeeAll]}
-        onPress={() => router.push('/categories')}
-        accessibilityLabel="Quiz Categories"
-        >
-          <Text style={styles.linkText}>See all</Text>
-
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }

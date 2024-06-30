@@ -21,6 +21,8 @@ export default function RootLayout() {
           <Stack.Screen name="CreateAccount/index" options={{title:"Create account", headerShown: false}}/>
           <Stack.Screen name="(tabs)" options={{title:"Create account", headerShown: false}}/>
           <Stack.Screen name="createQuizz" options={{title:"Create Quiz", headerShown: false}}/>
+          <Stack.Screen name="categories/index" options={{title:"Categories", headerShown: true}}/>
+
 
     
       </Stack>

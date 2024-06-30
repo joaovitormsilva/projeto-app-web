@@ -9,14 +9,13 @@ export default function CategoriesScreen() {
   const [loading, setLoading] = useState(false);
 
   const categories = [
-    { name: 'Tech', image: require('../../assets/images/react-logo.png') },
-    { name: 'Entertainment', image: require('../../assets/images/react-logo.png') },
-    { name: 'Science', image: require('../../assets/images/react-logo.png') },
-    { name: 'Geography', image: require('../../assets/images/react-logo.png') },
-    { name: 'History', image: require('../../assets/images/react-logo.png') },
-    { name: 'Sports', image: require('../../assets/images/react-logo.png') },
-    { name: 'Other', image: require('../../assets/images/react-logo.png') },
-
+    { name: 'Tech', image: require('../../assets/images/react-logo.png'), route: '/categories/tech' },
+    { name: 'Entertainment', image: require('../../assets/images/react-logo.png'), route: '/categories/entertainment' },
+    { name: 'Science', image: require('../../assets/images/react-logo.png'), route: '/categories/science' },
+    { name: 'Geography', image: require('../../assets/images/react-logo.png'), route: '/categories/geography' },
+    { name: 'History', image: require('../../assets/images/react-logo.png'), route: '/categories/history' },
+    { name: 'Sports', image: require('../../assets/images/react-logo.png'), route: '/categories/sports' },
+    { name: 'Others', image: require('../../assets/images/react-logo.png'), route: '/categories/others' },
   ];
 
   let [fontsLoaded] = useFonts({
@@ -32,7 +31,11 @@ export default function CategoriesScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       {categories.map((category, index) => (
-        <TouchableOpacity key={index} style={styles.categoryContainer}>
+        <TouchableOpacity
+          key={index}
+          style={styles.categoryContainer}
+          onPress={() => router.push(category.route)} // Navegar para a rota correspondente
+        >
           <Image source={category.image} style={styles.categoryImage} />
           <Text style={styles.categoryText}>{category.name}</Text>
         </TouchableOpacity>
