@@ -68,25 +68,30 @@ export default function CreateQuizScreen() {
   };
 
   const handleConfirm = () => {
-    const newQuiz = {
-      id: uuid.v4(),
-      name: inputText,
-      description: descriptionText,
-      category,
-      numQuestions,
-      duration,
-      imageUri: image || undefined,
-    };
-
     if (user) {
-      saveQuiz(newQuiz, user.id); // Passe o userId ao salvar o quiz
+      const newQuiz = {
+        id: uuid.v4() as string, // Convertendo o id para string explicitamente
+        name: inputText,
+        description: descriptionText,
+        category,
+        numQuestions: parseInt(numQuestions), // Convertendo para número, se necessário
+        duration: parseInt(duration), // Convertendo para número, se necessário
+        imageUri: image || undefined,
+        userId: user.id, // Adicionando a propriedade userId
+        questions: [] // Inicializando como um array vazio
+      };
+  
+      saveQuiz(newQuiz, user.id).then(() => {
+        router.replace({
+          pathname: '../createQuestions',
+          params: { quizId: newQuiz.id, numQuestions },
+        });
+      });
+    } else {
+      alert("User not found. Please log in again.");
     }
-
-    router.replace({
-      pathname: '../createQuestions',
-      params: { numQuestions },
-    });
   };
+  
 
   return (
     <View style={styles.container}>
@@ -170,100 +175,81 @@ export default function CreateQuizScreen() {
 }
 
 const styles = StyleSheet.create({
-  box: {
-    width: '65%',
-    height: 50,
-    borderRadius: 8,
-    margin: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#FCC307',
-  },
-  boxSetQuiz: {
-    width: '90%',
-    height: '18%',
-    borderRadius: 8,
-    backgroundColor: '#05203C',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  boxUpload: {
-    width: '90%',
-    height: '63%',
-    borderRadius: 8,
-    margin: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderColor: 'white',
-    borderWidth: 1,
-    borderStyle: 'dashed',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '90%',
-  },
-  textThumbnail: {
-    color: 'white',
-    fontSize: 18,
-  },
   container: {
     flex: 1,
-    backgroundColor: '#F8FAF4',
+    padding: 16,
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
+    height: '100%'
   },
-  text: {
-    color: '#05203C',
-    fontSize: 14,
-    fontFamily: 'Poppins_300Light',
-    textAlign: 'left',
-    width: '90%',
+  textThumbnail: {
+    fontSize: 16,
+    color: '#000',
   },
-  input: {
-    width: '90%',
+  boxSetQuiz: {
+    borderColor: '#aaa',
+    borderWidth: 1,
+    borderRadius: 4,
+    padding: 16,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  boxUpload: {
+    marginTop: 8,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 20,
-    paddingLeft: 10,
-    color: 'black',
+    borderRadius: 4,
+    padding: 8,
+    alignItems: 'center',
+  },
+  successMessage: {
+    color: 'green',
+    marginBottom: 8,
+  },
+  box: {
+    backgroundColor: '#FCC307',
+    padding: 16,
+    borderRadius: 4,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  text: {
+    color: '#000',
+    fontSize: 16,
+  },
+  input: {
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 4,
+    padding: 8,
+    marginBottom: 16,
+    width: '100%',
+  },
+  counterText: {
+    alignSelf: 'flex-end',
+    color: '#aaa',
+    marginBottom: 16,
   },
   picker: {
-    height: 40,
-    width: '90%',
-    marginBottom: 20,
+    width: '100%',
+    height: 50,
+    marginBottom: 16,
   },
   borderOnly: {
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 8,
-  },
-  successMessage: {
-    color: '#00FF00',
-    fontSize: 16,
-    marginVertical: 10,
-    fontFamily: 'Poppins_300Light',
-  },
-  counterText: {
-    width: '90%',
-    textAlign: 'right',
-    color: '#aaa',
-    fontSize: 12,
-    marginBottom: 10,
+    borderRadius: 4,
   },
   confirmButton: {
-    width: '90%',
-    height: 50,
+    backgroundColor: '#FCC307',
+    padding: 16,
     borderRadius: 8,
-    margin: 8,
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#05203C',
   },
   confirmButtonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontFamily: 'Poppins_300Light',
+    color: '#000',
+    fontSize: 16,
   },
 });

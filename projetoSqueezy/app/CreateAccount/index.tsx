@@ -1,13 +1,13 @@
-import { Image, View, Text, StyleSheet, ActivityIndicator, SafeAreaView, TextInput, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator, SafeAreaView, TextInput, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFonts, Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic } from '@expo-google-fonts/poppins';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useUser } from '../../scripts/UserContext'; // Certifique-se de que o caminho está correto
+import uuid from 'react-native-uuid'; // Importe a função para gerar UUID
 
 export default function CreateAccountScreen() {
   const { setUser } = useUser(); // Certifique-se de acessar setUser corretamente
-
   const router = useRouter();
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
@@ -29,7 +29,7 @@ export default function CreateAccountScreen() {
 
   const saveUserData = async () => {
     const userData = {
-      id: '1', // Adicione um ID único aqui
+      id: uuid.v4(), // Gerando um ID único
       username: userName, // Certifique-se de armazenar o nome do usuário
       email,
       password, // Armazene a senha
@@ -83,8 +83,6 @@ export default function CreateAccountScreen() {
     </View>
   );
 }
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

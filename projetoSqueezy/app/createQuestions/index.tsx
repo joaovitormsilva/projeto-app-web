@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import uuid from 'react-native-uuid';
+import { useQuiz } from '../../scripts/QuizContext';
+import { useUser } from '../../scripts/UserContext';
 
 export default function CreateQuestionsScreen() {
   const router = useRouter();
   const { numQuestions } = useLocalSearchParams();
-  
-  // Garantir que numQuestions é uma string e fornecer um valor padrão se for undefined
+  const { quizzes, saveQuiz } = useQuiz();
+  const { user } = useUser();
+
   const questionsCount = parseInt(numQuestions as string) || 5;
-  
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questions, setQuestions] = useState<string[]>(Array(questionsCount).fill(''));
   const [options, setOptions] = useState<string[][]>(Array(questionsCount).fill(Array(5).fill('')));
@@ -32,7 +35,7 @@ export default function CreateQuestionsScreen() {
     setCorrectAnswers(newCorrectAnswers);
   };
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = async () => {
     const currentQuestion = questions[currentQuestionIndex];
     const currentOptions = options[currentQuestionIndex];
     const currentCorrectAnswer = correctAnswers[currentQuestionIndex];
@@ -45,7 +48,28 @@ export default function CreateQuestionsScreen() {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      // Navegar para a tela de conclusão do quiz
+      const formattedQuestions = questions.map((questionText, index) => ({
+        id: uuid.v4() as string,
+        questionText,
+        options: options[index].map((text, optIndex) => ({
+          id: uuid.v4() as string,
+          text,
+          correct: correctAnswers[index] === optIndex,
+        })),
+      }));
+
+      const newQuiz = {
+        id: uuid.v4() as string,
+        name: '', // Você pode definir o nome do quiz conforme necessário
+        description: '', // Você pode definir a descrição do quiz conforme necessário
+        category: '', // Você pode definir a categoria do quiz conforme necessário
+        numQuestions: questionsCount,
+        duration: 0, // Defina a duração conforme necessário
+        userId: user.id,
+        questions: formattedQuestions,
+      };
+
+      await saveQuiz(newQuiz, user.id);
       router.replace('/finishQuiz');
     }
   };
@@ -94,6 +118,7 @@ export default function CreateQuestionsScreen() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

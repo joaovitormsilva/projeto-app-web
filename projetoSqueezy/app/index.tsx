@@ -9,7 +9,8 @@ import CreateAccountScreen from './CreateAccount';
 import SignInScreen from './SignIn';
 import { UserProvider } from '../scripts/UserContext';
 import { QuizProvider } from '../scripts/QuizContext';
-
+import QuizJogavelScreen from './quizJogavel';
+import QuizJogavelPerguntasScreen from './quizJogavelPerguntas'
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -17,12 +18,16 @@ export default function App() {
       <UserProvider>
         <QuizProvider>
           <Stack.Navigator initialRouteName="telaInicial/Index">
-            <Stack.Screen name="telaInicial" component={SquizzyScreen} options={{title:"Squizzy", headerShown: false}}/>
+
+            <Stack.Screen name="telaInicial/index" component={SquizzyScreen} options={{title:"Squizzy", headerShown: false}}/>
             <Stack.Screen name="home" component={HomeScreen} options={{title:"home", headerShown: true}}/>
             <Stack.Screen name="createQuizz" component={CreateQuizScreen} options={{title:"create quiz", headerShown: true}} />
             <Stack.Screen name="profile" component={ProfileScreen} options={{title:"profile", headerShown: true}} />
             <Stack.Screen name="createAccount" component={CreateAccountScreen} options={{title:"Create Account", headerShown: true}} />
             <Stack.Screen name="SignIn" component={SignInScreen} options={{title:"SignIn", headerShown: true}} />
+            <Stack.Screen name="quizJogavel/index" component={QuizJogavelScreen} options={{title:"Quiz jogavel", headerShown: true}} />
+            <Stack.Screen name="quizJogavelPerguntas/index" component={QuizJogavelPerguntasScreen} options={{title:"Quiz  Perguntas", headerShown: true}} />
+
           </Stack.Navigator>
         </QuizProvider>
       </UserProvider>
