@@ -21,8 +21,9 @@ export default function RootLayout() {
           <Stack.Screen name="CreateAccount/index" options={{title:"Create account", headerShown: false}}/>
           <Stack.Screen name="(tabs)" options={{title:"Create account", headerShown: false}}/>
           <Stack.Screen name="createQuizz" options={{title:"Create Quiz", headerShown: false}}/>
+          <Stack.Screen name="quizJogavel/index" options={{title:"Quiz", headerShown: true}} />
+          <Stack.Screen name="quizJogavelPerguntas/index" options={{title:"Perguntas", headerShown: true}} />
 
-    
       </Stack>
         
       </QuizProvider>

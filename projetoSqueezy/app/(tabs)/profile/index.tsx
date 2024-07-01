@@ -2,11 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useUser } from '../../../scripts/UserContext'; // Atualize o caminho conforme necessário
 import { useQuiz } from '../../../scripts/QuizContext'; // Atualize o caminho conforme necessário
+import { useRouter } from 'expo-router'; // Importação para navegação
+
+interface Quiz {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  numQuestions: number;
+  duration: number;
+  imageUri?: string;
+  userId: string;
+}
 
 export default function ProfileScreen() {
   const { user, loadUser } = useUser(); // Acessando o usuário através do contexto e a função de carregar o usuário
   const { quizzes } = useQuiz(); // Acessando quizzes através do contexto
   const [loading, setLoading] = useState(true);
+  const router = useRouter(); // Instância do roteador
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -25,7 +38,7 @@ export default function ProfileScreen() {
     return <Text style={styles.errorText}>Failed to load user data.</Text>;
   }
 
-  const userQuizzes = quizzes.filter((quiz: { userId: any; }) => quiz.userId === user.id); // Filtrando quizzes pelo usuário logado
+  const userQuizzes = quizzes.filter((quiz: Quiz) => quiz.userId === user.id); // Filtrando quizzes pelo usuário logado
 
   return (
     <View style={styles.container}>
@@ -35,12 +48,15 @@ export default function ProfileScreen() {
         <View style={styles.row}>
           <Text style={styles.labelText}>Your Quizzes</Text>
           {userQuizzes.length > 0 ? (
-            userQuizzes.map((quiz: { id: React.Key | null | undefined; name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }) => (
+            userQuizzes.map((quiz: Quiz) => (
               <TouchableOpacity
                 key={quiz.id}
                 style={[styles.box, styles.boxBackgroundYellow]}
                 onPress={() => {
-                  // Adicione aqui a navegação para a tela de gerenciamento do quiz específico
+                  router.push({
+                    pathname: '/quizJogavel', // Caminho para a tela de quiz jogável
+                    params: { quizId: quiz.id }, // Passando o ID do quiz como parâmetro
+                  });
                 }}
               >
                 <Text>{quiz.name}</Text>
@@ -54,7 +70,6 @@ export default function ProfileScreen() {
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {

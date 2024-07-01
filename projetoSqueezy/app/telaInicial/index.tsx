@@ -22,6 +22,7 @@ export default function SquizzyScreen() {
         onPress={() => router.push('/CreateAccount')}
         accessibilityLabel="Create Account"
       >
+
         <Text style={[styles.text, styles.linkText]}>Create Account</Text>
       </TouchableOpacity>
 
