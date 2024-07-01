@@ -45,15 +45,29 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
 
   const saveQuiz = async (quiz: Quiz, userId: string) => {
     try {
-      const newQuiz = { ...quiz, userId };
-      const newQuizzes = [...quizzes, newQuiz];
+      // Verificar se o quiz já existe pelo ID
+      const existingQuizIndex = quizzes.findIndex(q => q.id === quiz.id);
+  
+      let newQuizzes;
+      if (existingQuizIndex !== -1) {
+        // Se o quiz já existe, atualize-o
+        newQuizzes = quizzes.map((q, index) =>
+          index === existingQuizIndex ? { ...q, ...quiz } : q
+        );
+      } else {
+        // Se não existe, adicione o novo quiz
+        const newQuiz = { ...quiz, userId };
+        newQuizzes = [...quizzes, newQuiz];
+      }
+  
+      // Atualize o estado e armazene no AsyncStorage
       setQuizzes(newQuizzes);
       await AsyncStorage.setItem('quizzes', JSON.stringify(newQuizzes));
     } catch (error) {
       console.error('Failed to save quiz:', error);
     }
   };
-
+  
   return (
     <QuizContext.Provider value={{ quizzes, saveQuiz }}>
       {children}
