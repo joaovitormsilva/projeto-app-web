@@ -17,7 +17,7 @@ export default function LayoutCreateQuestions() {
         }
         
     }>
-      <Stack.Screen name="index" options={{title:"Create Questions", headerShown: true}}/>
+      <Stack.Screen name="index" options={{title:"Create Questions", headerShown: false}}/>
 
       </Stack>
   )

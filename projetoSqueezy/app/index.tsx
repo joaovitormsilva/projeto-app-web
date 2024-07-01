@@ -10,22 +10,33 @@ import CreateAccountScreen from './CreateAccount';
 import SignInScreen from './SignIn';
 import { UserProvider } from '../scripts/UserContext';
 import { QuizProvider } from '../scripts/QuizContext';
+import QuizJogavelScreen from './quizJogavel';
+import quizQuestions from './createQuestions';
 
+import QuizJogavelPerguntasScreen from './quizJogavelPerguntas'
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
       <UserProvider>
         <QuizProvider>
+          
+
+
           <Stack.Navigator initialRouteName="telaInicial/Index">
-            <Stack.Screen name="telaInicial" component={SquizzyScreen} options={{title:"Squizzy", headerShown: false}}/>
-            <Stack.Screen name="home" component={HomeScreen} options={{title:"home", headerShown: true}}/>
-            <Stack.Screen name="createQuizz" component={CreateQuizScreen} options={{title:"create quiz", headerShown: true}} />
-            <Stack.Screen name="categories" component={CategoriesScreen} options={{title:"categories", headerShown: true}} />
-            <Stack.Screen name="profile" component={ProfileScreen} options={{title:"profile", headerShown: true}} />
-            <Stack.Screen name="createAccount" component={CreateAccountScreen} options={{title:"Create Account", headerShown: true}} />
-            <Stack.Screen name="SignIn" component={SignInScreen} options={{title:"SignIn", headerShown: true}} />
+
+            <Stack.Screen name="telaInicial/index" component={SquizzyScreen} options={{title:"Squizzy", headerShown: false}}/>
+            <Stack.Screen name="home" component={HomeScreen} options={{title:"home", headerShown: false}}/>
+            <Stack.Screen name="createQuizz" component={CreateQuizScreen} options={{title:"create quiz", headerShown: false}} />
+            <Stack.Screen name="(tabs)/profile" component={ProfileScreen} options={{title:"profile", headerShown: false}} />
+            <Stack.Screen name="createAccount" component={CreateAccountScreen} options={{title:"Create Account", headerShown: false}} />
+            <Stack.Screen name="SignIn" component={SignInScreen} options={{title:"SignIn", headerShown: false}} />
+            <Stack.Screen name="quizQuestions" component={quizQuestions} options={{title:"quizQuestions", headerShown: false}}/>
+            <Stack.Screen name="quizJogavel/index" component={QuizJogavelScreen} options={{title:"Quiz jogavel", headerShown: false}} />
+            <Stack.Screen name="quizJogavelPerguntas/index" component={QuizJogavelPerguntasScreen} options={{title:"Quiz  Perguntas", headerShown: false}} />
+
           </Stack.Navigator>
+
         </QuizProvider>
       </UserProvider>
   );

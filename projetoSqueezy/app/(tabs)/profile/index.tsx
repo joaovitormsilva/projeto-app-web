@@ -1,46 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
-import { useUser } from '../../../scripts/UserContext'; // Atualize o caminho conforme necessário
-import { useQuiz } from '../../../scripts/QuizContext'; // Atualize o caminho conforme necessário
+import { useUser } from '../../../scripts/UserContext';
+import { useQuiz, Quiz } from '../../../scripts/QuizContext';
+import { useRouter } from 'expo-router';
 
 export default function ProfileScreen() {
-  const { user, loadUser } = useUser(); // Acessando o usuário através do contexto e a função de carregar o usuário
-  const { quizzes } = useQuiz(); // Acessando quizzes através do contexto
+  const { user, loadUser } = useUser();
+  const { quizzes } = useQuiz();
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const loadUserData = async () => {
-      await loadUser(); // Carregar os dados do usuário
+      await loadUser();
       setLoading(false);
     };
 
     loadUserData();
   }, []);
 
-  if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" style={styles.loading} />;
-  }
-
-  if (!user) {
-    return <Text style={styles.errorText}>Failed to load user data.</Text>;
-  }
-
-  const userQuizzes = quizzes.filter((quiz: { userId: any; }) => quiz.userId === user.id); // Filtrando quizzes pelo usuário logado
+  const userQuizzes = quizzes.filter((quiz: Quiz) => quiz.userId === user.id);
 
   return (
     <View style={styles.container}>
+       <View style={styles.container}>
       <View style={styles.column}>
         <View style={styles.circle}></View>
         <Text style={styles.labelText}>{user.username}</Text>
         <View style={styles.row}>
           <Text style={styles.labelText}>Your Quizzes</Text>
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <>
           {userQuizzes.length > 0 ? (
-            userQuizzes.map((quiz: { id: React.Key | null | undefined; name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }) => (
+            userQuizzes.map((quiz: Quiz) => (
               <TouchableOpacity
                 key={quiz.id}
                 style={[styles.box, styles.boxBackgroundYellow]}
                 onPress={() => {
-                  // Adicione aqui a navegação para a tela de gerenciamento do quiz específico
+                  router.push({
+                    pathname: '/quizJogavel',
+                    params: { quizId: quiz.id },
+                  });
                 }}
               >
                 <Text>{quiz.name}</Text>
@@ -49,12 +51,14 @@ export default function ProfileScreen() {
           ) : (
             <Text style={styles.noQuizzesText}>No quizzes found.</Text>
           )}
+        </>
+      )}
+          </View>
+          </View>
         </View>
-      </View>
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {

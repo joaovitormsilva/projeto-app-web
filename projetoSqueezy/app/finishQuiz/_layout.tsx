@@ -17,7 +17,7 @@ export default function LayoutFinishQuestions() {
         }
         
     }>
-      <Stack.Screen name="index" options={{title:"Finish Questions", headerShown: true}}/>
+      <Stack.Screen name="index" options={{title:"Finish Questions", headerShown: false}}/>
 
       </Stack>
   )
