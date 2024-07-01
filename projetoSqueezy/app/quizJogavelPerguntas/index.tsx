@@ -22,7 +22,7 @@ export interface Quiz {
 }
 
 export default function QuizJogavelPerguntasScreen() {
-  const { quizId, numQuestions } = useLocalSearchParams();
+  const { quizId } = useLocalSearchParams();
   const { quizzes } = useQuiz();
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -43,11 +43,10 @@ export default function QuizJogavelPerguntasScreen() {
     if (isCorrect) {
       setScore(score + 1);
     }
-    const numQuestionsInt = parseInt(numQuestions as string, 10);
-    if (currentQuestionIndex < numQuestionsInt - 1) {
+    if (currentQuestionIndex < quiz!.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      alert(`Quiz completed! Your score is ${score + (isCorrect ? 1 : 0)}/${numQuestionsInt}`);
+      alert(`Quiz completed! Your score is ${score + (isCorrect ? 1 : 0)}/${quiz!.questions.length}`);
       // Navegar para a tela de resultados ou outra lógica aqui
     }
   };
@@ -62,14 +61,11 @@ export default function QuizJogavelPerguntasScreen() {
 
   const currentQuestion = quiz.questions[currentQuestionIndex];
 
-  if (!currentQuestion) {
-    return <Text style={styles.errorText}>Question not found.</Text>;
-  }
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{currentQuestion.questionText}</Text>
-      {currentQuestion.options.map(option => (
+
+      {currentQuestion.options.map((option) => (
         <TouchableOpacity
           key={option.id}
           style={styles.button}
@@ -81,6 +77,7 @@ export default function QuizJogavelPerguntasScreen() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

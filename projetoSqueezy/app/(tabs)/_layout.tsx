@@ -40,7 +40,6 @@ export default function Layout() {
           <TabBarIcon name={focused ? 'person' : 'person-outline'} color={color}/>
         )
         }}/>
-
     </Tabs>
   )
 }

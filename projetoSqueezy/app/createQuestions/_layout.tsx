@@ -10,7 +10,7 @@ export default function LayoutCreateQuestions() {
     screenOptions={
         {
             headerStyle:{
-              backgroundColor:'#F8FAF4'
+              backgroundColor:'#fff'
             },
             headerShadowVisible:false,
             headerTitleAlign:'center'
