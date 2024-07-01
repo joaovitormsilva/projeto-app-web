@@ -16,7 +16,7 @@ export default function RootLayout() {
             headerTitleAlign:'center'
           }}
           >
-          <Stack.Screen name="telaInicial/index" options={{title:"Squizzy", headerShown: false}}/>
+          <Stack.Screen name="index" options={{title:"telaInicial", headerShown: false}}/>
           <Stack.Screen name="SignIn/index" options={{title:"SignIn", headerShown: false}}/>
           <Stack.Screen name="CreateAccount/index" options={{title:"Create account", headerShown: false}}/>
           <Stack.Screen name="createQuizz" options={{title:"Create Quiz", headerShown: false}}/>

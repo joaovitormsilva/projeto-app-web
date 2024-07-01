@@ -6,8 +6,8 @@ import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { Picker } from '@react-native-picker/picker';
 import uuid from 'react-native-uuid';
-import { useQuiz } from '../../scripts/QuizContext'; // Certifique-se de que o caminho do import está correto
-import { useUser } from '../../scripts/UserContext'; // Certifique-se de que o caminho do import está correto
+import { useQuiz } from '../../scripts/QuizContext';
+import { useUser } from '../../scripts/UserContext';
 
 export default function CreateQuizScreen() {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function CreateQuizScreen() {
   const [image, setImage] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const { saveQuiz } = useQuiz();
-  const { user } = useUser(); // Obtenha o usuário atual
+  const { user } = useUser();
 
   let [fontsLoaded] = useFonts({ Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic });
 
@@ -70,17 +70,17 @@ export default function CreateQuizScreen() {
   const handleConfirm = () => {
     if (user) {
       const newQuiz = {
-        id: uuid.v4() as string, // Convertendo o id para string explicitamente
+        id: uuid.v4() as string,
         name: inputText,
         description: descriptionText,
         category,
-        numQuestions: parseInt(numQuestions), // Convertendo para número, se necessário
-        duration: parseInt(duration), // Convertendo para número, se necessário
+        numQuestions: parseInt(numQuestions),
+        duration: parseInt(duration),
         imageUri: image || undefined,
-        userId: user.id, // Adicionando a propriedade userId
-        questions: [] // Inicializando como um array vazio
+        userId: user.id,
+        questions: []
       };
-  
+
       saveQuiz(newQuiz, user.id).then(() => {
         router.replace({
           pathname: '../createQuestions',
@@ -91,7 +91,6 @@ export default function CreateQuizScreen() {
       alert("User not found. Please log in again.");
     }
   };
-  
 
   return (
     <View style={styles.container}>

@@ -32,7 +32,7 @@ export default function CreateQuestionsScreen() {
   const questionsCount = parseInt(numQuestions as string) || 5;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questions, setQuestions] = useState<string[]>(Array(questionsCount).fill(''));
-  const [options, setOptions] = useState<string[][]>(Array(questionsCount).fill(Array(4).fill('')));
+  const [options, setOptions] = useState<string[][]>(Array.from({ length: questionsCount }, () => Array(4).fill('')));
   const [correctAnswers, setCorrectAnswers] = useState<(number | null)[]>(Array(questionsCount).fill(null));
 
   // Buscando o quiz existente
@@ -67,12 +67,12 @@ export default function CreateQuestionsScreen() {
     const currentQuestion = questions[currentQuestionIndex];
     const currentOptions = options[currentQuestionIndex];
     const currentCorrectAnswer = correctAnswers[currentQuestionIndex];
-  
+
     if (!currentQuestion || currentOptions.includes('') || currentCorrectAnswer === null) {
       Alert.alert('Incomplete Question', 'Please complete the question and all options, and select the correct answer before proceeding.');
       return;
     }
-  
+
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
@@ -85,12 +85,12 @@ export default function CreateQuestionsScreen() {
           correct: correctAnswers[index] === optIndex,
         })),
       }));
-  
+
       const newQuizWithQuestions: Quiz = {
         ...existingQuiz!,
         questions: formattedQuestions,
       };
-  
+
       await saveQuiz(newQuizWithQuestions, user.id);
       router.replace('/finishQuiz');
     }
@@ -99,11 +99,11 @@ export default function CreateQuestionsScreen() {
   if (!existingQuiz) {
     return <Text>Loading...</Text>;
   }
-  
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Question {currentQuestionIndex + 1}</Text>
-      
+
       <TextInput
         style={styles.input}
         value={questions[currentQuestionIndex]}
@@ -149,7 +149,7 @@ export default function CreateQuestionsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAF4',
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
