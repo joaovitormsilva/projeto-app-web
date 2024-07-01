@@ -1,21 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import uuid from 'react-native-uuid';
 import { useQuiz } from '../../scripts/QuizContext';
 import { useUser } from '../../scripts/UserContext';
 
+interface Quiz {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  numQuestions: number;
+  duration: number;
+  userId: string;
+  questions: {
+    id: string;
+    questionText: string;
+    options: {
+      id: string;
+      text: string;
+      correct: boolean;
+    }[];
+  }[];
+}
+
 export default function CreateQuestionsScreen() {
   const router = useRouter();
-  const { numQuestions } = useLocalSearchParams();
+  const { quizId, numQuestions } = useLocalSearchParams();
   const { quizzes, saveQuiz } = useQuiz();
   const { user } = useUser();
-
   const questionsCount = parseInt(numQuestions as string) || 5;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questions, setQuestions] = useState<string[]>(Array(questionsCount).fill(''));
-  const [options, setOptions] = useState<string[][]>(Array(questionsCount).fill(Array(5).fill('')));
+  const [options, setOptions] = useState<string[][]>(Array(questionsCount).fill(Array(4).fill('')));
   const [correctAnswers, setCorrectAnswers] = useState<(number | null)[]>(Array(questionsCount).fill(null));
+
+  // Buscando o quiz existente
+  const existingQuiz = quizzes.find(q => q.id === quizId);
+
+  useEffect(() => {
+    if (!existingQuiz) {
+      Alert.alert('Quiz not found', 'The specified quiz does not exist.');
+      router.replace('/profile'); // Redireciona de volta ao perfil caso o quiz não seja encontrado
+    }
+  }, [existingQuiz]);
 
   const handleQuestionChange = (text: string) => {
     const newQuestions = [...questions];
@@ -39,12 +67,12 @@ export default function CreateQuestionsScreen() {
     const currentQuestion = questions[currentQuestionIndex];
     const currentOptions = options[currentQuestionIndex];
     const currentCorrectAnswer = correctAnswers[currentQuestionIndex];
-
+  
     if (!currentQuestion || currentOptions.includes('') || currentCorrectAnswer === null) {
       Alert.alert('Incomplete Question', 'Please complete the question and all options, and select the correct answer before proceeding.');
       return;
     }
-
+  
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
@@ -57,23 +85,21 @@ export default function CreateQuestionsScreen() {
           correct: correctAnswers[index] === optIndex,
         })),
       }));
-
-      const newQuiz = {
-        id: uuid.v4() as string,
-        name: '', // Você pode definir o nome do quiz conforme necessário
-        description: '', // Você pode definir a descrição do quiz conforme necessário
-        category: '', // Você pode definir a categoria do quiz conforme necessário
-        numQuestions: questionsCount,
-        duration: 0, // Defina a duração conforme necessário
-        userId: user.id,
+  
+      const newQuizWithQuestions: Quiz = {
+        ...existingQuiz!,
         questions: formattedQuestions,
       };
-
-      await saveQuiz(newQuiz, user.id);
+  
+      await saveQuiz(newQuizWithQuestions, user.id);
       router.replace('/finishQuiz');
     }
   };
 
+  if (!existingQuiz) {
+    return <Text>Loading...</Text>;
+  }
+  
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Question {currentQuestionIndex + 1}</Text>
@@ -114,10 +140,10 @@ export default function CreateQuestionsScreen() {
           {currentQuestionIndex < questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
         </Text>
       </TouchableOpacity>
-
     </View>
   );
 }
+
 
 
 const styles = StyleSheet.create({
