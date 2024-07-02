@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useQuiz, Quiz } from '../../scripts/QuizContext'; // Importe as interfaces corretas
+import { useNavigation, CommonActions } from '@react-navigation/native';
 
 export default function QuizDefaultPerguntasScreen() {
   const { quizId } = useLocalSearchParams();
@@ -10,6 +11,8 @@ export default function QuizDefaultPerguntasScreen() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [timeLeft, setTimeLeft] = useState(300); // Tempo padrão de 5 minutos (300 segundos)
+  const navigation = useNavigation();
 
   useEffect(() => {
     const loadQuiz = () => {
@@ -23,15 +26,35 @@ export default function QuizDefaultPerguntasScreen() {
     loadQuiz();
   }, [quizId, quizzes, defaultQuizzes]);
 
-  const findQuizById = (id: string): Quiz | null => {
-    // Procura nos quizzes padrão
-    let foundQuiz = defaultQuizzes.find((q: Quiz) => q.id === id);
+  useEffect(() => {
+    if (timeLeft === 0) {
+      Alert.alert('Tempo Esgotado', 'O tempo acabou! Retornando para a tela inicial.', [
+        {
+          text: 'OK',
+          onPress: () =>
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: '(tabs)/home/index' }],
+              })
+            ),
+        },
+      ]);
+      return;
+    }
 
-    // Se não encontrado nos quizzes padrão, procura nos quizzes criados pelo usuário
+    const timer = setTimeout(() => {
+      setTimeLeft(timeLeft - 1);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [timeLeft, navigation]);
+
+  const findQuizById = (id: string): Quiz | null => {
+    let foundQuiz = defaultQuizzes.find((q: Quiz) => q.id === id);
     if (!foundQuiz) {
       foundQuiz = quizzes.find((q: Quiz) => q.id === id);
     }
-
     return foundQuiz || null;
   };
 
@@ -41,7 +64,7 @@ export default function QuizDefaultPerguntasScreen() {
     if (currentQuestionIndex < (quiz?.questions.length || 0) - 1) {
       setCurrentQuestionIndex(prevIndex => prevIndex + 1);
     } else {
-      alert(`Quiz completed! Your score is ${score}/${quiz?.questions.length}`);
+      Alert.alert(`Quiz completed! Your score is ${score}/${quiz?.questions.length}`);
       // Navegar para a tela de resultados ou outra lógica aqui
     }
   };
@@ -56,9 +79,18 @@ export default function QuizDefaultPerguntasScreen() {
 
   const currentQuestion = quiz.questions[currentQuestionIndex];
 
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.questionNumber}>Question {currentQuestionIndex + 1}</Text>
+      <Text style={[styles.timer, timeLeft > 60 ? styles.timerGreen : styles.timerRed]}>
+        Time Left: {formatTime(timeLeft)}
+      </Text>
 
       <View style={styles.questionContainer}>
          <Text style={styles.title}>{currentQuestion.question}</Text>
@@ -75,8 +107,6 @@ export default function QuizDefaultPerguntasScreen() {
             </TouchableOpacity>
           ))}
       </View>
-
-
     </View>
   );
 }
@@ -104,49 +134,61 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         width: '100%',
         height: '100%',
-      },
-      questionNumber: {
+    },
+    questionNumber: {
         position: 'absolute',
         top: 30,
         left: '10%',
         fontSize: 20,
         color: '#000',
         fontFamily: 'Poppins_300Light',
-      },
-      questionContainer: {
+    },
+    timer: {
+        position: 'absolute',
+        top: 30,
+        right: '10%',
+        fontSize: 20,
+        fontFamily: 'Poppins_300Light',
+    },
+    timerGreen: {
+        color: 'green',
+    },
+    timerRed: {
+        color: 'red',
+    },
+    questionContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
-      },
-      title: {
+    },
+    title: {
         fontSize: 24,
         textAlign: 'center',
         fontFamily: 'Poppins_300Light',
         marginBottom: '70%',
-      },
-      buttonContainer: {
+    },
+    buttonContainer: {
         position: 'absolute',
         bottom: 20,
         width: '100%',
         alignItems: 'center',
-      },
-      button: {
+    },
+    button: {
         backgroundColor: '#05203C', // Cor dos botões
         padding: 16,
         borderRadius: 8,
         alignItems: 'center',
         marginTop: 8,
         width: '100%', // Largura dos botões
-      },
-      buttonText: {
+    },
+    buttonText: {
         color: '#F8FAF4', // Cor do texto dentro dos botões
         fontSize: 16,
         fontFamily: 'Poppins_300Light',
-      },
-      errorText: {
+    },
+    errorText: {
         color: 'red',
         fontSize: 16,
-      },
-  });
-  
+    },
+});
