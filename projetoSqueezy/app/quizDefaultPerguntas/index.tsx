@@ -58,17 +58,25 @@ export default function QuizDefaultPerguntasScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{currentQuestion.question}</Text>
+      <Text style={styles.questionNumber}>Question {currentQuestionIndex + 1}</Text>
 
-      {currentQuestion.options.map((option, index) => (
-        <TouchableOpacity
-          key={index.toString()} // Use index.toString() como key, pois não há garantia de que option.id seja uma string
-          style={styles.button}
-          onPress={() => handleAnswer(getCorrectness(option))}
-        >
-          <Text style={styles.buttonText}>{getOptionText(option)}</Text>
-        </TouchableOpacity>
-      ))}
+      <View style={styles.questionContainer}>
+         <Text style={styles.title}>{currentQuestion.question}</Text>
+      </View>
+
+      <View style={styles.buttonContainer}>
+          {currentQuestion.options.map((option, index) => (
+            <TouchableOpacity
+              key={index.toString()} // Use index.toString() como key, pois não há garantia de que option.id seja uma string
+              style={styles.button}
+              onPress={() => handleAnswer(getCorrectness(option))}
+            >
+              <Text style={styles.buttonText}>{getOptionText(option)}</Text>
+            </TouchableOpacity>
+          ))}
+      </View>
+
+
     </View>
   );
 }
@@ -89,32 +97,56 @@ const getOptionText = (option: string | { id?: string; text?: string; correct?: 
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      padding: 16,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: '100%',
-      height: '100%'
-    },
-    title: {
-      fontSize: 24,
-      marginBottom: 16,
-    },
-    button: {
-      backgroundColor: '#FCC307',
-      padding: 16,
-      borderRadius: 8,
-      alignItems: 'center',
-      marginTop: 8,
-    },
-    buttonText: {
-      color: '#000',
-      fontSize: 16,
-    },
-    errorText: {
-      color: 'red',
-      fontSize: 16,
-    },
+        flex: 1,
+        padding: 16,
+        backgroundColor: '#F8FAF4',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
+        height: '100%',
+      },
+      questionNumber: {
+        position: 'absolute',
+        top: 30,
+        left: '10%',
+        fontSize: 20,
+        color: '#000',
+        fontFamily: 'Poppins_300Light',
+      },
+      questionContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+      },
+      title: {
+        fontSize: 24,
+        textAlign: 'center',
+        fontFamily: 'Poppins_300Light',
+        marginBottom: '70%',
+      },
+      buttonContainer: {
+        position: 'absolute',
+        bottom: 20,
+        width: '100%',
+        alignItems: 'center',
+      },
+      button: {
+        backgroundColor: '#05203C', // Cor dos botões
+        padding: 16,
+        borderRadius: 8,
+        alignItems: 'center',
+        marginTop: 8,
+        width: '100%', // Largura dos botões
+      },
+      buttonText: {
+        color: '#F8FAF4', // Cor do texto dentro dos botões
+        fontSize: 16,
+        fontFamily: 'Poppins_300Light',
+      },
+      errorText: {
+        color: 'red',
+        fontSize: 16,
+      },
   });
   

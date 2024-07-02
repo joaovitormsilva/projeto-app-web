@@ -55,17 +55,22 @@ export default function QuizJogavelScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{quiz.name}</Text>
-      <View style={styles.description}>
-        <Text style={{ fontSize: 18 }}>Description:</Text>
-        <Text>{quiz.description}</Text>
+      <View style={styles.titleBox}>
+        <Text style={styles.title}>{quiz.name}</Text>
       </View>
+      <View style={styles.description}>
+        <Text style={styles.descriptionTitle}>Description:</Text>
+        <Text style={styles.descriptionText}>{quiz.description}</Text>
+        <Text style={styles.questionsText}>Questions: {quiz.numQuestions}</Text>
+      </View>
+      <View style={styles.titleBox}>
       <TouchableOpacity 
         style={styles.button} 
         onPress={navigateToQuizQuestions}
       >
         <Text style={styles.buttonText}>Start Quiz</Text>
       </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -76,30 +81,60 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#F8FAF4',
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
     height: '100%',
   },
+  titleBox: {
+    height: '20%',
+    width: '80%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   title: {
-    fontSize: 24,
-    marginBottom: 16,
+    color: '#05203C',
+    fontSize: 26,
+    fontWeight: 'bold',
+    fontFamily: 'Poppins_300Light',
   },
   description: {
-    fontSize: 16,
     marginBottom: 24,
-    width: '90%',
+    width: '80%',
+    height: '50%',
+    justifyContent: 'center',
+  },
+  descriptionTitle: {
+    color: '#000',
+    fontFamily: 'Poppins_300Light',
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  descriptionText: {
+    fontFamily: 'Poppins_300Light',
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  questionsText: {
+    fontFamily: 'Poppins_300Light',
+    fontSize: 16,
+    color: '#A1A1A1',
   },
   button: {
     backgroundColor: '#FCC307',
     padding: 16,
-    borderRadius: 8,
+    borderRadius: 10,
     alignItems: 'center',
+    width: '100%',
+
   },
   buttonText: {
-    color: '#000',
+    color: '#F8FAF4',
     fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    fontFamily: 'Poppins_300Light',
   },
   errorText: {
     color: 'red',
