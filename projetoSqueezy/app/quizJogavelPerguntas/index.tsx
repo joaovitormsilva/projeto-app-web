@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useQuiz, Quiz, Question } from '../../scripts/QuizContext'; // Importe as interfaces corretas
+import { useNavigation, CommonActions } from '@react-navigation/native';
 
 export default function QuizJogavelPerguntasScreen() {
-  const { quizId } = useLocalSearchParams();
+  const { quizId, duration } = useLocalSearchParams(); // Adicionei duration aqui
   const { quizzes } = useQuiz();
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [timeLeft, setTimeLeft] = useState(parseInt(duration, 10) * 60);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    setTimeLeft((parseInt(duration, 10) * 60) || 300);
+  }, [duration]);
+  
 
   useEffect(() => {
     const loadQuiz = () => {
@@ -21,6 +29,30 @@ export default function QuizJogavelPerguntasScreen() {
     loadQuiz();
   }, [quizId, quizzes]);
 
+  useEffect(() => {
+    if (timeLeft === 0) {
+      Alert.alert('Tempo Esgotado', 'O tempo acabou! Retornando para a tela inicial.', [
+        {
+          text: 'OK',
+          onPress: () =>
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: '(tabs)/home/index' }],
+              })
+            ),
+        },
+      ]);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setTimeLeft(timeLeft - 1);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [timeLeft, navigation]);
+
   const handleAnswer = (isCorrect: boolean) => {
     if (isCorrect) {
       setScore(score + 1);
@@ -28,7 +60,7 @@ export default function QuizJogavelPerguntasScreen() {
     if (currentQuestionIndex < quiz!.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      alert(`Quiz completed! Your score is ${score + (isCorrect ? 1 : 0)}/${quiz!.questions.length}`);
+      Alert.alert(`Quiz completed! Your score is ${score}/${quiz!.questions.length}`);
       // Navegar para a tela de resultados ou outra lógica aqui
     }
   };
@@ -43,12 +75,23 @@ export default function QuizJogavelPerguntasScreen() {
 
   const currentQuestion = quiz.questions[currentQuestionIndex];
 
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.questionNumber}>Question {currentQuestionIndex + 1}</Text>
+      <Text style={[styles.timer, timeLeft > 60 ? styles.timerGreen : styles.timerRed]}>
+        Time Left: {formatTime(timeLeft)}
+      </Text>
+
       <View style={styles.questionContainer}>
         <Text style={styles.title}>{currentQuestion.questionText}</Text>
       </View>
+
       <View style={styles.buttonContainer}>
         {currentQuestion.options.map((option, index) => (
           <TouchableOpacity
@@ -96,6 +139,19 @@ const styles = StyleSheet.create({
     color: '#000',
     fontFamily: 'Poppins_300Light',
   },
+  timer: {
+    position: 'absolute',
+    top: 30,
+    right: '10%',
+    fontSize: 20,
+    fontFamily: 'Poppins_300Light',
+  },
+  timerGreen: {
+    color: 'green',
+  },
+  timerRed: {
+    color: 'red',
+  },
   questionContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -132,4 +188,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-

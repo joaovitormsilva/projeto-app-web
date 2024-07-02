@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, TextInput, ActivityIndicator, ScrollView } from 'react-native';import { useRouter } from 'expo-router';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, ActivityIndicator, ScrollView } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useFonts, Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic } from '@expo-google-fonts/poppins';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
@@ -84,7 +85,7 @@ export default function CreateQuizScreen() {
       saveQuiz(newQuiz, user.id).then(() => {
         router.replace({
           pathname: '../createQuestions',
-          params: { quizId: newQuiz.id, numQuestions },
+          params: { quizId: newQuiz.id, numQuestions, duration },  // Passa o parâmetro duration
         });
       });
     } else {
@@ -94,13 +95,10 @@ export default function CreateQuizScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-
-
       <TouchableOpacity style={[styles.boxSetQuiz]} onPress={pickImage}>
         <Text style={[styles.textThumbnail, { width: '100%', textAlign: 'left' }]}>Set Quiz Thumbnail</Text>
         <View style={styles.boxUpload}>
           <FontAwesome name="arrow-circle-up" size={24} color="#fff" />
-          
           <Text style={styles.textThumbnail}>Click to upload</Text>
           <Text style={[styles.textThumbnail, { fontSize: 12, color: '#9E9E9E' }]}>.svg .jpg .png etc</Text>
         </View>
