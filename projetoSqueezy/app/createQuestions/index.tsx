@@ -2,27 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import uuid from 'react-native-uuid';
-import { useQuiz } from '../../scripts/QuizContext';
+import { useQuiz, Quiz, Question } from '../../scripts/QuizContext'; // Importar a interface Quiz e Question corretamente
 import { useUser } from '../../scripts/UserContext';
-
-interface Quiz {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  numQuestions: number;
-  duration: number;
-  userId: string;
-  questions: {
-    id: string;
-    questionText: string;
-    options: {
-      id: string;
-      text: string;
-      correct: boolean;
-    }[];
-  }[];
-}
 
 export default function CreateQuestionsScreen() {
   const router = useRouter();
@@ -32,12 +13,12 @@ export default function CreateQuestionsScreen() {
   const questionsCount = parseInt(numQuestions as string) || 5;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questions, setQuestions] = useState<string[]>(Array(questionsCount).fill(''));
-  const [options, setOptions] = useState<string[][]>(Array.from({ length: questionsCount }, () => Array(4).fill('')));
+  const [options, setOptions] = useState<{ id: string; text: string; correct: boolean }[][]>(Array.from({ length: questionsCount }, () => Array(4).fill({ id: '', text: '', correct: false })));
   const [correctAnswers, setCorrectAnswers] = useState<(number | null)[]>(Array(questionsCount).fill(null));
 
   // Buscando o quiz existente
   const existingQuiz = quizzes.find(q => q.id === quizId);
-
+  
   useEffect(() => {
     if (!existingQuiz) {
       Alert.alert('Quiz not found', 'The specified quiz does not exist.');
@@ -53,7 +34,7 @@ export default function CreateQuestionsScreen() {
 
   const handleOptionChange = (text: string, optionIndex: number) => {
     const newOptions = [...options];
-    newOptions[currentQuestionIndex][optionIndex] = text;
+    newOptions[currentQuestionIndex][optionIndex] = { ...newOptions[currentQuestionIndex][optionIndex], text };
     setOptions(newOptions);
   };
 
@@ -68,7 +49,7 @@ export default function CreateQuestionsScreen() {
     const currentOptions = options[currentQuestionIndex];
     const currentCorrectAnswer = correctAnswers[currentQuestionIndex];
 
-    if (!currentQuestion || currentOptions.includes('') || currentCorrectAnswer === null) {
+    if (!currentQuestion || currentOptions.some(opt => opt.text === '') || currentCorrectAnswer === null) {
       Alert.alert('Incomplete Question', 'Please complete the question and all options, and select the correct answer before proceeding.');
       return;
     }
@@ -76,12 +57,12 @@ export default function CreateQuestionsScreen() {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      const formattedQuestions = questions.map((questionText, index) => ({
+      const formattedQuestions: Question[] = questions.map((questionText, index) => ({
         id: uuid.v4() as string,
         questionText,
-        options: options[index].map((text, optIndex) => ({
+        options: options[index].map((opt, optIndex) => ({
           id: uuid.v4() as string,
-          text,
+          text: opt.text,
           correct: correctAnswers[index] === optIndex,
         })),
       }));
@@ -112,11 +93,11 @@ export default function CreateQuestionsScreen() {
         placeholderTextColor="#aaa"
       />
 
-      {options[currentQuestionIndex].map((option: string, index: number) => (
+      {options[currentQuestionIndex].map((option, index) => (
         <View key={index} style={styles.optionContainer}>
           <TextInput
             style={[styles.input, styles.optionInput]}
-            value={option}
+            value={option.text}
             onChangeText={(text) => handleOptionChange(text, index)}
             placeholder={`Option ${index + 1}`}
             placeholderTextColor="#aaa"
@@ -143,8 +124,6 @@ export default function CreateQuestionsScreen() {
     </View>
   );
 }
-
-
 
 const styles = StyleSheet.create({
   container: {

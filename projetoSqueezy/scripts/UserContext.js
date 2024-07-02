@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser, selectedImage, setSelectedImage] = useState(null);
 
   const loadUser = async () => {
     try {
@@ -23,7 +23,7 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser, loadUser }}>
+    <UserContext.Provider value={{ user, setUser, loadUser, selectedImage, setSelectedImage}}>
       {children}
     </UserContext.Provider>
   );

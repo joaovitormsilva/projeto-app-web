@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { useQuiz, Quiz, Question } from '../../scripts/QuizContext'; // Importe as interfaces corretas
+import { useQuiz, Quiz } from '../../scripts/QuizContext'; // Importe as interfaces corretas
 
-export default function QuizJogavelPerguntasScreen() {
+export default function QuizDefaultPerguntasScreen() {
   const { quizId } = useLocalSearchParams();
-  const { quizzes } = useQuiz();
+  const { quizzes, defaultQuizzes } = useQuiz();
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -13,22 +13,35 @@ export default function QuizJogavelPerguntasScreen() {
 
   useEffect(() => {
     const loadQuiz = () => {
-      const foundQuiz = quizzes.find((q) => q.id === quizId);
-      setQuiz(foundQuiz || null);
+      if (typeof quizId === 'string') {
+        const foundQuiz = findQuizById(quizId);
+        setQuiz(foundQuiz);
+      }
       setLoading(false);
     };
 
     loadQuiz();
-  }, [quizId, quizzes]);
+  }, [quizId, quizzes, defaultQuizzes]);
+
+  const findQuizById = (id: string): Quiz | null => {
+    // Procura nos quizzes padrão
+    let foundQuiz = defaultQuizzes.find((q: Quiz) => q.id === id);
+
+    // Se não encontrado nos quizzes padrão, procura nos quizzes criados pelo usuário
+    if (!foundQuiz) {
+      foundQuiz = quizzes.find((q: Quiz) => q.id === id);
+    }
+
+    return foundQuiz || null;
+  };
 
   const handleAnswer = (isCorrect: boolean) => {
-    if (isCorrect) {
-      setScore(score + 1);
-    }
-    if (currentQuestionIndex < quiz!.questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    setScore(prevScore => prevScore + (isCorrect ? 1 : 0));
+
+    if (currentQuestionIndex < (quiz?.questions.length || 0) - 1) {
+      setCurrentQuestionIndex(prevIndex => prevIndex + 1);
     } else {
-      alert(`Quiz completed! Your score is ${score + (isCorrect ? 1 : 0)}/${quiz!.questions.length}`);
+      alert(`Quiz completed! Your score is ${score}/${quiz?.questions.length}`);
       // Navegar para a tela de resultados ou outra lógica aqui
     }
   };
@@ -45,7 +58,7 @@ export default function QuizJogavelPerguntasScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{currentQuestion.questionText}</Text>
+      <Text style={styles.title}>{currentQuestion.question}</Text>
 
       {currentQuestion.options.map((option, index) => (
         <TouchableOpacity
@@ -75,32 +88,33 @@ const getOptionText = (option: string | { id?: string; text?: string; correct?: 
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    height: '100%'
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 16,
-  },
-  button: {
-    backgroundColor: '#FCC307',
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  buttonText: {
-    color: '#000',
-    fontSize: 16,
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 16,
-  },
-});
+    container: {
+      flex: 1,
+      padding: 16,
+      backgroundColor: '#fff',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100%',
+      height: '100%'
+    },
+    title: {
+      fontSize: 24,
+      marginBottom: 16,
+    },
+    button: {
+      backgroundColor: '#FCC307',
+      padding: 16,
+      borderRadius: 8,
+      alignItems: 'center',
+      marginTop: 8,
+    },
+    buttonText: {
+      color: '#000',
+      fontSize: 16,
+    },
+    errorText: {
+      color: 'red',
+      fontSize: 16,
+    },
+  });
+  

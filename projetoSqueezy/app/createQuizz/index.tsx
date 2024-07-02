@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
-import { useRouter } from 'expo-router';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, ActivityIndicator, ScrollView } from 'react-native';import { useRouter } from 'expo-router';
 import { useFonts, Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic } from '@expo-google-fonts/poppins';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
@@ -8,6 +7,7 @@ import { Picker } from '@react-native-picker/picker';
 import uuid from 'react-native-uuid';
 import { useQuiz } from '../../scripts/QuizContext';
 import { useUser } from '../../scripts/UserContext';
+import { FontAwesome } from '@expo/vector-icons';  // Import FontAwesome
 
 export default function CreateQuizScreen() {
   const router = useRouter();
@@ -93,10 +93,14 @@ export default function CreateQuizScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
+
+
       <TouchableOpacity style={[styles.boxSetQuiz]} onPress={pickImage}>
-        <Text style={[styles.textThumbnail, { width: '90%', textAlign: 'left' }]}>Set Quiz Thumbnail</Text>
+        <Text style={[styles.textThumbnail, { width: '100%', textAlign: 'left' }]}>Set Quiz Thumbnail</Text>
         <View style={styles.boxUpload}>
+          <FontAwesome name="arrow-circle-up" size={24} color="#fff" />
+          
           <Text style={styles.textThumbnail}>Click to upload</Text>
           <Text style={[styles.textThumbnail, { fontSize: 12, color: '#9E9E9E' }]}>.svg .jpg .png etc</Text>
         </View>
@@ -169,37 +173,40 @@ export default function CreateQuizScreen() {
       <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
         <Text style={styles.confirmButtonText}>Confirmar</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     padding: 16,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    height: '100%'
   },
   textThumbnail: {
     fontSize: 16,
-    color: '#000',
+    color: '#fff',
   },
   boxSetQuiz: {
-    borderColor: '#aaa',
+    width:'100%',
+    backgroundColor:'#05203C',
+    borderColor: '#05203C',
     borderWidth: 1,
-    borderRadius: 4,
+    borderRadius: 8,
     padding: 16,
     alignItems: 'center',
     marginBottom: 16,
   },
   boxUpload: {
+    width:'100%',
     marginTop: 8,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 4,
+    borderColor: '#fff',
+    borderWidth: 2,
+    borderRadius: 8,
+    borderStyle:'dotted',
     padding: 8,
     alignItems: 'center',
   },
@@ -242,13 +249,13 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   confirmButton: {
-    backgroundColor: '#FCC307',
+    backgroundColor: '#05203C',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
   },
   confirmButtonText: {
-    color: '#000',
+    color: '#fff',
     fontSize: 16,
   },
 });

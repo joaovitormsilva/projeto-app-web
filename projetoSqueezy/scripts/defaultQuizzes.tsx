@@ -1,16 +1,13 @@
-export interface Question {
-  question: string;
-  options: string[];
-  correctAnswer: number;
+// defaultQuizzes.ts
+import { Question as QuizContextQuestion, Quiz as QuizContextQuiz } from './QuizContext';
+
+export interface Question extends QuizContextQuestion {
+  question: string;  // Altere `questionText` para `question`
+  options: string[]; // Mantenha `options` como string[]
+  correctAnswer: number; // Adicione `correctAnswer`
 }
 
-export interface Quiz {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  numQuestions: number;
-  duration: number;
+export interface Quiz extends Omit<QuizContextQuiz, 'questions'> {
   questions: Question[];
 }
 

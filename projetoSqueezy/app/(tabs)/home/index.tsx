@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   boxCategories: {
-    width: '45%',
+    width: '40%',
     height: 64,
     margin: 5,
     borderRadius: 10,

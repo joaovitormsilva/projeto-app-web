@@ -1,10 +1,14 @@
+// QuizContext.tsx
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { defaultQuizzes } from './defaultQuizzes';
 
 export interface Question {
-  id: string;
-  questionText: string;
-  options: { id: string; text: string; correct: boolean }[];
+  id?: string;  // Tornar opcional
+  question?: string;  // Altere `questionText` para `question`
+  questionText?: string; // Mantenha `questionText` opcional para compatibilidade
+  options: { id?: string; text?: string; correct?: boolean }[] | string[]; // Permitir `options` ser um array de strings
+  correctAnswer?: number; // Adicionar `correctAnswer` opcional
 }
 
 export interface Quiz {
@@ -15,19 +19,21 @@ export interface Quiz {
   numQuestions: number;
   duration: number;
   imageUri?: string;
-  userId: string;
+  userId?: string;  // Tornar userId opcional
   questions: Question[];
 }
 
 interface QuizContextType {
   quizzes: Quiz[];
-  saveQuiz: (quiz: Quiz, userId: string) => Promise<void>;
+  defaultQuizzes: Quiz[];
+  saveQuiz: (quiz: Quiz, userId: string, isDefault?: boolean) => Promise<void>;
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
 
 export const QuizProvider = ({ children }: { children: ReactNode }) => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const [defaultQuizzesState, setDefaultQuizzesState] = useState<Quiz[]>(defaultQuizzes);
 
   useEffect(() => {
     const loadQuizzes = async () => {
@@ -36,6 +42,13 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
         if (storedQuizzes) {
           setQuizzes(JSON.parse(storedQuizzes));
         }
+
+        const storedDefaultQuizzes = await AsyncStorage.getItem('defaultQuizzes');
+        if (storedDefaultQuizzes) {
+          setDefaultQuizzesState(JSON.parse(storedDefaultQuizzes));
+        } else {
+          setDefaultQuizzesState(defaultQuizzes);
+        }
       } catch (error) {
         console.error('Failed to load quizzes from storage:', error);
       }
@@ -43,33 +56,45 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
     loadQuizzes();
   }, []);
 
-  const saveQuiz = async (quiz: Quiz, userId: string) => {
+  const saveQuiz = async (quiz: Quiz, userId: string, isDefault = false) => {
     try {
-      // Verificar se o quiz já existe pelo ID
-      const existingQuizIndex = quizzes.findIndex(q => q.id === quiz.id);
-  
-      let newQuizzes;
-      if (existingQuizIndex !== -1) {
-        // Se o quiz já existe, atualize-o
-        newQuizzes = quizzes.map((q, index) =>
-          index === existingQuizIndex ? { ...q, ...quiz } : q
-        );
+      const newQuiz = { ...quiz, userId };
+      if (isDefault) {
+        const existingQuizIndex = defaultQuizzesState.findIndex(q => q.id === quiz.id);
+
+        let newDefaultQuizzes;
+        if (existingQuizIndex !== -1) {
+          newDefaultQuizzes = defaultQuizzesState.map((q, index) =>
+            index === existingQuizIndex ? { ...q, ...quiz } : q
+          );
+        } else {
+          newDefaultQuizzes = [...defaultQuizzesState, newQuiz];
+        }
+
+        setDefaultQuizzesState(newDefaultQuizzes);
+        await AsyncStorage.setItem('defaultQuizzes', JSON.stringify(newDefaultQuizzes));
       } else {
-        // Se não existe, adicione o novo quiz
-        const newQuiz = { ...quiz, userId };
-        newQuizzes = [...quizzes, newQuiz];
+        const existingQuizIndex = quizzes.findIndex(q => q.id === quiz.id);
+
+        let newQuizzes;
+        if (existingQuizIndex !== -1) {
+          newQuizzes = quizzes.map((q, index) =>
+            index === existingQuizIndex ? { ...q, ...quiz } : q
+          );
+        } else {
+          newQuizzes = [...quizzes, newQuiz];
+        }
+
+        setQuizzes(newQuizzes);
+        await AsyncStorage.setItem('quizzes', JSON.stringify(newQuizzes));
       }
-  
-      // Atualize o estado e armazene no AsyncStorage
-      setQuizzes(newQuizzes);
-      await AsyncStorage.setItem('quizzes', JSON.stringify(newQuizzes));
     } catch (error) {
       console.error('Failed to save quiz:', error);
     }
   };
-  
+
   return (
-    <QuizContext.Provider value={{ quizzes, saveQuiz }}>
+    <QuizContext.Provider value={{ quizzes, defaultQuizzes: defaultQuizzesState, saveQuiz }}>
       {children}
     </QuizContext.Provider>
   );
