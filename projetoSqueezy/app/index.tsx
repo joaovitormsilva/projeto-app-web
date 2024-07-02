@@ -13,6 +13,7 @@ import { QuizProvider } from '../scripts/QuizContext';
 import QuizJogavelScreen from './quizJogavel';
 import quizQuestions from './createQuestions';
 import QuizJogavelPerguntasScreen from './quizDefaultPerguntas';
+import TechScreen from './categories/tech';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +35,7 @@ export default function App() {
             <Stack.Screen name="quizQuestions" component={quizQuestions} options={{title:"quizQuestions", headerShown: false}}/>
             <Stack.Screen name="quizJogavel/index" component={QuizJogavelScreen} options={{title:"Quiz jogavel", headerShown: false}} />
             <Stack.Screen name="quizDefaultPerguntas/index" component={QuizJogavelPerguntasScreen} options={{title:"Quiz Default Perguntas", headerShown: false}} />
+            <Stack.Screen name="categories/tech/index" component={TechScreen} options={{title:"Tech Screen", headerShown: false}} />
 
           </Stack.Navigator>
 

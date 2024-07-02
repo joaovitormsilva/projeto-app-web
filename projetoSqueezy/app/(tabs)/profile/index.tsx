@@ -17,7 +17,7 @@ export default function ProfileScreen() {
     require('../../../assets/images/pumpkin.png'),
   ];
 
-  const selectImage = (image) => {
+  const selectImage = (image: any) => {
     setSelectedImage(image);
     setModalVisible(false);
   };
