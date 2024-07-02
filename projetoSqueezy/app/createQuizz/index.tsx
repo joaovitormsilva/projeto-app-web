@@ -130,7 +130,7 @@ export default function CreateQuizScreen() {
         style={[styles.input, { height: 100 }]}
         value={descriptionText}
         onChangeText={setDescriptionText}
-        placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sodales diam ac tincidunt malesuada. In hac habitasse platea dictumst."
+        placeholder="Write a description for your quiz..."
         placeholderTextColor="#aaa"
         multiline
         maxLength={100}
@@ -143,9 +143,13 @@ export default function CreateQuizScreen() {
         style={[styles.picker, styles.borderOnly]}
         onValueChange={(itemValue) => setCategory(itemValue)}
       >
-        <Picker.Item label="Category 1" value="category1" />
-        <Picker.Item label="Category 2" value="category2" />
-        <Picker.Item label="Category 3" value="category3" />
+        <Picker.Item label="Tech" value="tech" />
+        <Picker.Item label="Science" value="Science" />
+        <Picker.Item label="History" value="history" />
+        <Picker.Item label="Entertainment" value="entertainment" />
+        <Picker.Item label="Geography" value="geography" />
+        <Picker.Item label="Sports" value="sports" />
+        <Picker.Item label="Others" value="others" />
       </Picker>
 
       <Text style={styles.text}>Number of Questions</Text>
@@ -171,7 +175,7 @@ export default function CreateQuizScreen() {
       </Picker>
 
       <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
-        <Text style={styles.confirmButtonText}>Confirmar</Text>
+        <Text style={styles.confirmButtonText}>Next</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -224,6 +228,8 @@ const styles = StyleSheet.create({
   text: {
     color: '#000',
     fontSize: 16,
+    marginBottom: 8,
+    alignSelf: 'flex-start',
   },
   input: {
     borderColor: '#ccc',
@@ -251,6 +257,7 @@ const styles = StyleSheet.create({
   confirmButton: {
     backgroundColor: '#05203C',
     padding: 16,
+    paddingHorizontal: 64,
     borderRadius: 8,
     alignItems: 'center',
   },
