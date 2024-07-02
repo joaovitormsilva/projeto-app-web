@@ -1,42 +1,56 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { useQuiz } from '../../scripts/QuizContext'; // Certifique-se de que o caminho do import está correto
-
-interface Quiz {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  numQuestions: number;
-  duration: number;
-  imageUri?: string;
-  userId: string;
-}
+import { useQuiz, Quiz } from '../../scripts/QuizContext'; // Ajuste o caminho conforme necessário
 
 export default function QuizJogavelScreen() {
   const { quizId } = useLocalSearchParams();
-  const { quizzes } = useQuiz();
+  const { defaultQuizzes, quizzes } = useQuiz();
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const loadQuiz = () => {
-      const foundQuiz = quizzes.find((q: Quiz) => q.id === quizId);
+      // Verificar nos quizzes padrão
+      let foundQuiz = defaultQuizzes.find((q: Quiz) => q.id === quizId);
+      
+      // Se não encontrado nos quizzes padrão, verificar nos quizzes criados pelo usuário
+      if (!foundQuiz) {
+        foundQuiz = quizzes.find((q: Quiz) => q.id === quizId);
+      }
+      
       setQuiz(foundQuiz || null);
       setLoading(false);
     };
 
     loadQuiz();
-  }, [quizId, quizzes]);
+  }, [quizId, defaultQuizzes, quizzes]);
+
+  const navigateToQuizQuestions = () => {
+    if (!quiz) return;
+
+    if (quiz.userId) {
+      // Quiz criado pelo usuário, navegar para QuizJogavelPerguntasScreen
+      router.push({
+        pathname: '/quizJogavelPerguntas',
+        params: { quizId: quiz.id, numQuestions: quiz.numQuestions.toString() },
+      });
+    } else {
+      // Quiz padrão, navegar para QuizDefaultPerguntasScreen
+      router.push({
+        pathname: '/quizDefaultPerguntas',
+        params: { quizId: quiz.id },
+      });
+    }
+  };
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
   if (!quiz) {
-    return <Text style={styles.errorText}>Quiz not found.</Text>;
+    return <Text style={styles.errorText}>Quiz not found jogavel.</Text>;
   }
 
   return (
@@ -48,18 +62,15 @@ export default function QuizJogavelScreen() {
       </View>
       <TouchableOpacity 
         style={styles.button} 
-        onPress={() => {
-          router.push({
-            pathname: '/quizJogavelPerguntas',
-            params: { quizId: quiz.id, numQuestions: quiz.numQuestions },
-          });
-        }}
+        onPress={navigateToQuizQuestions}
       >
         <Text style={styles.buttonText}>Start Quiz</Text>
       </TouchableOpacity>
     </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {

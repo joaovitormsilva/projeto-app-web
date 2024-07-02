@@ -1,7 +1,8 @@
+// TechScreen.tsx
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useQuiz } from '../../../scripts/QuizContext'; // Certifique-se de ajustar o caminho conforme necessário
-import { useRouter } from 'expo-router'; // Certifique-se de ajustar o caminho conforme necessário
+import { useQuiz, Quiz } from '../../../scripts/QuizContext'; // Ajuste o caminho conforme necessário
+import { useRouter } from 'expo-router'; // Ajuste o caminho conforme necessário
 import { useFonts, Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic } from '@expo-google-fonts/poppins';
 
 export default function TechScreen() {
@@ -14,7 +15,7 @@ export default function TechScreen() {
     Poppins_900Black_Italic,
   });
 
-  // Filtrar os quizzes pela categoria 'Entertainment'
+  // Filtrar os quizzes pela categoria 'Tech'
   const quizzes = defaultQuizzes.filter(quiz => quiz.category === 'Tech');
 
   if (!fontsLoaded) {

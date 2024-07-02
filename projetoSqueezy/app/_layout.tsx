@@ -25,8 +25,10 @@ export default function RootLayout() {
 
     
           <Stack.Screen name="quizJogavel/index" options={{title:"Quiz", headerShown: true}} />
-          <Stack.Screen name="quizJogavelPerguntas/index" options={{title:"Perguntas", headerShown: true}} />
+          <Stack.Screen name="quizJogavelPerguntas/index" options={{title:"Perguntas", headerShown: false}} />
           <Stack.Screen name="(tabs)" options={{title:"tabs", headerShown: false}}/>
+          <Stack.Screen name="quizDefaultPerguntas/index" options={{title:"Quiz Questions", headerShown: true}} />
+
       </Stack>
         
       </QuizProvider>

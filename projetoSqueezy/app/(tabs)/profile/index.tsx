@@ -1,15 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Image, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Modal } from 'react-native';
 import { useUser } from '../../../scripts/UserContext';
 import { useQuiz, Quiz } from '../../../scripts/QuizContext';
 import { useRouter } from 'expo-router';
 
 export default function ProfileScreen() {
-  const { user, loadUser } = useUser();
+  const { user, loadUser, selectedImage, setSelectedImage  } = useUser();
   const { quizzes } = useQuiz();
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const [modalVisible, setModalVisible] = useState(false);
 
+  const images = [
+    require('../../../assets/images/fairy.png'),
+    require('../../../assets/images/ninja.png'),
+    require('../../../assets/images/pumpkin.png'),
+  ];
+
+  const selectImage = (image: any) => {
+    setSelectedImage(image);
+  };
+  
   useEffect(() => {
     const loadUserData = async () => {
       await loadUser();
@@ -25,9 +36,21 @@ export default function ProfileScreen() {
     <View style={styles.container}>
        <View style={styles.container}>
       <View style={styles.column}>
-        <View style={styles.circle}></View>
+       <TouchableOpacity style={styles.circle} onPress={() => setModalVisible(true)}>
+        {selectedImage && <Image source={selectedImage} style={styles.profileImage} />}
+      </TouchableOpacity>
+      
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      />
+
         <Text style={styles.labelText}>{user.username}</Text>
         <View style={styles.row}>
+
+
           <Text style={styles.labelText}>Your Quizzes</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
@@ -112,5 +135,10 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
     marginTop: 20,
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
   },
 });
