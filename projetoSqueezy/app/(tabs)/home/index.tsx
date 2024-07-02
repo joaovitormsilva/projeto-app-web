@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Alert, TouchableOpacity, ImageBackground } from 'react-native';
 import React, { useEffect } from 'react';
-import { useNavigation, Link, useRouter } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -28,72 +28,95 @@ export default function HomeScreen() {
     };
   }, [navigation]);
 
+  const categoryImages: { [key: string]: any } = {
+    Tech: require('../../../assets/images/c1.png'),
+    Entertainment: require('../../../assets/images/c2.png'),
+    Science: require('../../../assets/images/c3.png'),
+    Geography: require('../../../assets/images/c4.png'),
+    History: require('../../../assets/images/c5.png'),
+    Sports: require('../../../assets/images/c6.png'),
+  };
+
   return (
-    <View style={styles.container}>
-      
-      <View style={[styles.row, styles.headerRow]}>
-        <View style={styles.circle}></View>
-        <View style={styles.headerTextContainer}>
-          <Text style={styles.headerText}>Hello,</Text>
-          <Text style={styles.headerText}>Name User</Text>
+    <View style={styles.outerContainer}>
+      <View style={styles.innerContainer}>
+        
+        <View style={[styles.row, styles.headerRow]}>
+          <View style={styles.circle}></View>
+          <View style={styles.headerTextContainer}>
+            <Text style={styles.headerText}>Hello,</Text>
+            <Text style={styles.headerText}>Name User</Text>
+          </View>
         </View>
-      </View>
 
-      <View style={styles.column}>
-        <View style={styles.row}>
+        <View style={styles.column}>
+          <View style={styles.row}>
 
-          <TouchableOpacity 
-            style={[styles.box, styles.boxBackground1]}
-            onPress={() => router.push('/createQuizz')}
-            accessibilityLabel="Create Quiz"
-          >
-           
-            <Text style={styles.linkText}>Create Quiz</Text>
-           
+            <TouchableOpacity style={styles.touchable} onPress={() => router.push('/createQuizz')} accessibilityLabel="Create Quiz">
+            <ImageBackground source={require('../../../assets/images/box1.png')} style={styles.box} imageStyle={styles.image}>
+                <Text style={styles.linkText}>Create Quiz</Text>
+              </ImageBackground>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.touchable}>
+            <ImageBackground source={require('../../../assets/images/box2.png')} style={styles.box} imageStyle={styles.image}>
+                <Text style={styles.linkText}>Join Quiz</Text>
+              </ImageBackground>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.touchable}>
+            <ImageBackground source={require('../../../assets/images/box3.png')} style={styles.box} imageStyle={styles.image}>
+                <Text style={styles.linkText}>Achievements</Text>
+              </ImageBackground>
+            </TouchableOpacity>
+
+          </View>
+          <TouchableOpacity style={styles.touchable}>
+          <ImageBackground source={require('../../../assets/images/random.png')} style={styles.boxRandom} imageStyle={styles.image}>
+              <Text style={styles.linkTextRandom}>Random Quiz</Text>
+              <Text style={styles.linkText}>Don't know where to start?</Text>
+              <Text style={styles.linkText}>Let us help you!</Text>
+            </ImageBackground>
           </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.box, styles.boxBackground2]}>
-            <Text style={styles.linkText}>Join Quiz</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.box, styles.boxBackground3]}>
-            <Text style={styles.linkText}>Achievements</Text>
-          </TouchableOpacity>
-          
         </View>
-        <TouchableOpacity style={[styles.boxRandom, styles.boxBackgroundRandom]}>
-          <Text style={styles.linkText}>Random Quiz</Text>
-        </TouchableOpacity>
-      </View>
 
-      <View style={[styles.column, styles.categoriesContainer]}>
-        <Text style={[styles.text, styles.categoriesText]}>Categories</Text>
-        <View style={styles.categoriesGrid}>
-          {['Tech', 'Entertainment', 'Science', 'Geography', 'History', 'Sports'].map((category, index) => (
-            <View key={index} style={[styles.boxCategories, index % 3 === 0 ? styles.categoryBackground1 : index % 3 === 1 ? styles.categoryBackground2 : styles.categoryBackground3]}>
-              <Text style={styles.linkText}>{category}</Text>
-            </View>
-          ))}
+        <View style={[styles.column, styles.categoriesContainer]}>
+          <Text style={[styles.text, styles.categoriesText]}>Categories</Text>
+          <View style={styles.categoriesGrid}>
+              {Object.keys(categoryImages).map((category, index) => (
+                <TouchableOpacity key={index} style={styles.touchable}>
+                  <ImageBackground source={categoryImages[category]} style={styles.boxCategories} imageStyle={styles.image}>
+                  <Text style={styles.linkText}>{category}</Text>
+                </ImageBackground>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <TouchableOpacity style={[styles.boxSeeAll, styles.boxBackgroundSeeAll]}>
+              <Text style={styles.linkText}>See all</Text>
+            </TouchableOpacity>
         </View>
-        <TouchableOpacity style={[styles.boxSeeAll, styles.boxBackgroundSeeAll]}>
-          <Text style={styles.linkText}>See all</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  outerContainer: {
     flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     backgroundColor: '#fff',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
+  },
+  innerContainer: {
+    maxWidth: '90%',
+    maxHeight: '90%',
   },
   headerRow: {
     width: '90%',
     justifyContent: 'flex-start',
-    marginTop: 20,
+    marginTop: '10%',
     height: '8%',
   },
   circle: {
@@ -105,7 +128,7 @@ const styles = StyleSheet.create({
   headerTextContainer: {
     width: '60%',
     height: '100%',
-    marginTop: 10,
+    marginTop: 5,
     marginLeft: 10,
   },
   headerText: {
@@ -115,36 +138,34 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   row: {
-    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   column: {
-    width: '90%',
     flexDirection: 'column',
     flexWrap: 'wrap',
-    margin: 8,
-    alignItems: 'center',
   },
   box: {
-    width: '30%',
+    width: 100,
     height: 137,
     borderRadius: 10,
-    alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 8,
   },
   boxRandom: {
     width: '100%',
     height: 151,
-    marginTop: 20,
+    marginTop: 8,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   boxCategories: {
-    width: '45%',
+    width: '100%',
     height: 64,
-    margin: 5,
+    marginTop: 5,
+    marginRight: 32,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
@@ -173,7 +194,17 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: 'white',
     textShadowColor: '#1E1E1E',
-    textShadowOffset: { width: 1, height: 4 },
+    textShadowOffset: { width: 1, height: 2 },
+    textShadowRadius: 4,
+    textAlign: 'center',
+    shadowOpacity: 0.25,
+  },
+  linkTextRandom: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: 'white',
+    textShadowColor: '#1E1E1E',
+    textShadowOffset: { width: 1, height: 2 },
     textShadowRadius: 4,
     textAlign: 'center',
     shadowOpacity: 0.25,
@@ -184,32 +215,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  touchable: {
+    marginBottom: 10,
+  },
   categoriesText: {
     textAlign: 'left',
     width: '100%',
   },
-  boxBackground1: {
-    backgroundColor: '#FCC307',
-  },
-  boxBackground2: {
-    backgroundColor: '#05203C',
-  },
-  boxBackground3: {
-    backgroundColor: '#4FDB38',
-  },
-  boxBackgroundRandom: {
-    backgroundColor: '#FCC307',
+  image: {
+    borderRadius: 10,
   },
   boxBackgroundSeeAll: {
     backgroundColor: 'skyblue',
-  },
-  categoryBackground1: {
-    backgroundColor: '#FCC307',
-  },
-  categoryBackground2: {
-    backgroundColor: '#05203C',
-  },
-  categoryBackground3: {
-    backgroundColor: '#4FDB38',
   },
 });
