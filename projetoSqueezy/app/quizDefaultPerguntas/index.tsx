@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useQuiz, Quiz } from '../../scripts/QuizContext'; // Importe as interfaces corretas
-import { useNavigation, CommonActions } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 export default function QuizDefaultPerguntasScreen() {
   const { quizId } = useLocalSearchParams();
@@ -12,7 +12,7 @@ export default function QuizDefaultPerguntasScreen() {
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
   const [timeLeft, setTimeLeft] = useState(300); // Tempo padrão de 5 minutos (300 segundos)
-  const navigation = useNavigation();
+  const router = useRouter();
 
   useEffect(() => {
     const loadQuiz = () => {
@@ -31,13 +31,7 @@ export default function QuizDefaultPerguntasScreen() {
       Alert.alert('Tempo Esgotado', 'O tempo acabou! Retornando para a tela inicial.', [
         {
           text: 'OK',
-          onPress: () =>
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [{ name: '(tabs)/home/index' }],
-              })
-            ),
+          onPress: () => router.replace('/home'),
         },
       ]);
       return;
@@ -48,7 +42,7 @@ export default function QuizDefaultPerguntasScreen() {
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [timeLeft, navigation]);
+  }, [timeLeft, router]);
 
   const findQuizById = (id: string): Quiz | null => {
     let foundQuiz = defaultQuizzes.find((q: Quiz) => q.id === id);
@@ -64,8 +58,16 @@ export default function QuizDefaultPerguntasScreen() {
     if (currentQuestionIndex < (quiz?.questions.length || 0) - 1) {
       setCurrentQuestionIndex(prevIndex => prevIndex + 1);
     } else {
-      Alert.alert(`Quiz completed! Your score is ${score}/${quiz?.questions.length}`);
-      // Navegar para a tela de resultados ou outra lógica aqui
+      Alert.alert(
+        'Quiz completed!',
+        `Your score is ${score + (isCorrect ? 1 : 0)}/${quiz?.questions.length}`,
+        [
+          {
+            text: 'OK',
+            onPress: () => router.replace('/home'),
+          },
+        ]
+      );
     }
   };
 
@@ -93,19 +95,19 @@ export default function QuizDefaultPerguntasScreen() {
       </Text>
 
       <View style={styles.questionContainer}>
-         <Text style={styles.title}>{currentQuestion.question}</Text>
+        <Text style={styles.title}>{currentQuestion.question}</Text>
       </View>
 
       <View style={styles.buttonContainer}>
-          {currentQuestion.options.map((option, index) => (
-            <TouchableOpacity
-              key={index.toString()} // Use index.toString() como key, pois não há garantia de que option.id seja uma string
-              style={styles.button}
-              onPress={() => handleAnswer(getCorrectness(option))}
-            >
-              <Text style={styles.buttonText}>{getOptionText(option)}</Text>
-            </TouchableOpacity>
-          ))}
+        {currentQuestion.options.map((option, index) => (
+          <TouchableOpacity
+            key={index.toString()} // Use index.toString() como key, pois não há garantia de que option.id seja uma string
+            style={styles.button}
+            onPress={() => handleAnswer(getCorrectness(option))}
+          >
+            <Text style={styles.buttonText}>{getOptionText(option)}</Text>
+          </TouchableOpacity>
+        ))}
       </View>
     </View>
   );
