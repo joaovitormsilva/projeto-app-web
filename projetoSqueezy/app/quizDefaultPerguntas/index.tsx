@@ -52,7 +52,10 @@ export default function QuizDefaultPerguntasScreen() {
     return foundQuiz || null;
   };
 
-  const handleAnswer = (isCorrect: boolean) => {
+  const handleAnswer = (selectedOptionIndex: number) => {
+    const currentQuestion = quiz?.questions[currentQuestionIndex];
+    const isCorrect = currentQuestion?.correctAnswer === selectedOptionIndex;
+
     setScore(prevScore => prevScore + (isCorrect ? 1 : 0));
 
     if (currentQuestionIndex < (quiz?.questions.length || 0) - 1) {
@@ -103,7 +106,7 @@ export default function QuizDefaultPerguntasScreen() {
           <TouchableOpacity
             key={index.toString()} // Use index.toString() como key, pois não há garantia de que option.id seja uma string
             style={styles.button}
-            onPress={() => handleAnswer(getCorrectness(option))}
+            onPress={() => handleAnswer(index)}
           >
             <Text style={styles.buttonText}>{getOptionText(option)}</Text>
           </TouchableOpacity>
@@ -112,6 +115,7 @@ export default function QuizDefaultPerguntasScreen() {
     </View>
   );
 }
+
 
 const getCorrectness = (option: string | { id?: string; text?: string; correct?: boolean }) => {
   if (typeof option === 'string') {
