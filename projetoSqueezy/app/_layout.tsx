@@ -29,6 +29,8 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{title:"tabs", headerShown: false}}/>
           <Stack.Screen name="quizDefaultPerguntas/index" options={{title:"Quiz Questions", headerShown: true}} />
 
+          <Stack.Screen name="categories/tech/index" options={{title:"Tech", headerShown: true}}/>
+
       </Stack>
         
       </QuizProvider>

@@ -28,7 +28,7 @@ export default function CategoriesScreen() {
     return <ActivityIndicator size="large" color="#0000ff" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />;
   }
 
-  const getCategoryBackgroundColor = (index) => {
+  const getCategoryBackgroundColor = (index: number) => {
     const colors = ['#FCC307', '#4FDB38', '#05203C'];
     return colors[index % colors.length];
   };
