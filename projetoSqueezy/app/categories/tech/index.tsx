@@ -54,12 +54,12 @@ export default function TechScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAF4',
+    backgroundColor: '#FCC307',
     padding: 20,
     justifyContent: 'center',
   },
   quizContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F8FAF4',
     borderRadius: 8,
     padding: 20,
     marginBottom: 10,
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   },
   noQuizzesText: {
     fontSize: 16,
-    color: '#999',
+    color: '#F8FAF4',
     textAlign: 'center',
     marginTop: 20,
   },

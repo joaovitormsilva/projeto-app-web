@@ -1,7 +1,8 @@
+// TechScreen.tsx
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useQuiz } from '../../../scripts/QuizContext'; // Certifique-se de ajustar o caminho conforme necessário
-import { useRouter } from 'expo-router'; // Certifique-se de ajustar o caminho conforme necessário
+import { useQuiz, Quiz } from '../../../scripts/QuizContext'; // Ajuste o caminho conforme necessário
+import { useRouter } from 'expo-router'; // Ajuste o caminho conforme necessário
 import { useFonts, Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic } from '@expo-google-fonts/poppins';
 
 export default function EntertainmentScreen() {
@@ -14,7 +15,7 @@ export default function EntertainmentScreen() {
     Poppins_900Black_Italic,
   });
 
-  // Filtrar os quizzes pela categoria 'Entertainment'
+  // Filtrar os quizzes pela categoria
   const quizzes = defaultQuizzes.filter(quiz => quiz.category === 'Entertainment');
 
   if (!fontsLoaded) {
@@ -53,12 +54,12 @@ export default function EntertainmentScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAF4',
+    backgroundColor: '#4FDB38',
     padding: 20,
     justifyContent: 'center',
   },
   quizContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F8FAF4',
     borderRadius: 8,
     padding: 20,
     marginBottom: 10,
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
   },
   noQuizzesText: {
     fontSize: 16,
-    color: '#999',
+    color: '#F8FAF4',
     textAlign: 'center',
     marginTop: 20,
   },

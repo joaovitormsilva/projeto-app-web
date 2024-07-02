@@ -9,13 +9,13 @@ export default function CategoriesScreen() {
   const [loading, setLoading] = useState(false);
 
   const categories = [
-    { name: 'Tech', image: require('../../assets/images/react-logo.png'), route: '/categories/tech' },
-    { name: 'Entertainment', image: require('../../assets/images/react-logo.png'), route: '/categories/entertainment' },
-    { name: 'Science', image: require('../../assets/images/react-logo.png'), route: '/categories/science' },
-    { name: 'Geography', image: require('../../assets/images/react-logo.png'), route: '/categories/geography' },
-    { name: 'History', image: require('../../assets/images/react-logo.png'), route: '/categories/history' },
-    { name: 'Sports', image: require('../../assets/images/react-logo.png'), route: '/categories/sports' },
-    { name: 'Others', image: require('../../assets/images/react-logo.png'), route: '/categories/others' },
+    { name: 'Tech', image: require('../../assets/images/techvector.png'), route: '/categories/tech' },
+    { name: 'Entertainment', image: require('../../assets/images/entertainmentvector.png'), route: '/categories/entertainment' },
+    { name: 'Science', image: require('../../assets/images/sciencevector.png'), route: '/categories/science' },
+    { name: 'Geography', image: require('../../assets/images/geographyvector.png'), route: '/categories/geography' },
+    { name: 'History', image: require('../../assets/images/historyvector.png'), route: '/categories/history' },
+    { name: 'Sports', image: require('../../assets/images/sportsvector.png'), route: '/categories/sports' },
+    { name: 'Others', image: require('../../assets/images/quizvector.png'), route: '/categories/others' },
   ];
 
   let [fontsLoaded] = useFonts({
@@ -28,12 +28,17 @@ export default function CategoriesScreen() {
     return <ActivityIndicator size="large" color="#0000ff" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />;
   }
 
+  const getCategoryBackgroundColor = (index) => {
+    const colors = ['#FCC307', '#4FDB38', '#05203C'];
+    return colors[index % colors.length];
+  };
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       {categories.map((category, index) => (
         <TouchableOpacity
           key={index}
-          style={styles.categoryContainer}
+          style={[styles.categoryContainer, { backgroundColor: getCategoryBackgroundColor(index) }]}
           onPress={() => router.push(category.route)} // Navegar para a rota correspondente
         >
           <Image source={category.image} style={styles.categoryImage} />
@@ -47,7 +52,7 @@ export default function CategoriesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#F8FAF4',
   },
   contentContainer: {
     alignItems: 'center',
@@ -59,18 +64,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     marginBottom: 10,
-    backgroundColor: '#f0f0f0',
     borderRadius: 5,
     width: '80%',
   },
   categoryImage: {
-    width: 75,
-    height: 75,
-    marginRight: 10,
+    width: 50,
+    height: 50,
+    marginLeft: '5%',
+    marginRight: '10%',
   },
   categoryText: {
-    color: '#05203C',
+
+    color: '#F8FAF4',
     fontSize: 18,
+    fontWeight: 'bold',
     fontFamily: 'Poppins_300Light',
     textAlign: 'left',
   },
