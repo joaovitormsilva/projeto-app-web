@@ -59,8 +59,8 @@ export default function QuizJogavelScreen() {
         <Text style={styles.title}>{quiz.name}</Text>
       </View>
       <View style={styles.description}>
-        <Text style={styles.descriptionTitle}>Description:</Text>
         <Text style={styles.descriptionText}>{quiz.description}</Text>
+        <Text style={styles.questionsText}>Category: {quiz.category}</Text>
         <Text style={styles.questionsText}>Questions: {quiz.numQuestions}</Text>
       </View>
       <View style={styles.titleBox}>

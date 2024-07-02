@@ -5,7 +5,7 @@ import { useQuiz, Quiz } from '../../../scripts/QuizContext';
 import { useRouter } from 'expo-router';
 
 export default function ProfileScreen() {
-  const { user, loadUser, selectedImage, setSelectedImage  } = useUser();
+  const { user, loadUser, selectedImage, setSelectedImage } = useUser();
   const { quizzes } = useQuiz();
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -17,10 +17,11 @@ export default function ProfileScreen() {
     require('../../../assets/images/pumpkin.png'),
   ];
 
-  const selectImage = (image: any) => {
+  const selectImage = (image) => {
     setSelectedImage(image);
+    setModalVisible(false);
   };
-  
+
   useEffect(() => {
     const loadUserData = async () => {
       await loadUser();
@@ -30,37 +31,47 @@ export default function ProfileScreen() {
     loadUserData();
   }, []);
 
-  const userQuizzes = quizzes.filter((quiz: Quiz) => quiz.userId === user.id);
+  const userQuizzes = quizzes.filter((quiz) => quiz.userId === user.id);
 
   return (
     <View style={styles.container}>
-       <View style={styles.container}>
-      <View style={styles.column}>
-       <TouchableOpacity style={styles.circle} onPress={() => setModalVisible(true)}>
+      <TouchableOpacity style={styles.circle} onPress={() => setModalVisible(true)}>
         {selectedImage && <Image source={selectedImage} style={styles.profileImage} />}
       </TouchableOpacity>
-      
+
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
-      />
+      >
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalTitle}>Choose your avatar</Text>
+          <View style={styles.imageRow}>
+            {images.map((image, index) => (
+              <TouchableOpacity key={index} onPress={() => selectImage(image)}>
+                <Image source={image} style={styles.modalImage} />
+              </TouchableOpacity>
+            ))}
+          </View>
+          <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
 
-        <Text style={styles.labelText}>{user.username}</Text>
-        <View style={styles.row}>
+      <Text style={styles.username}>{user?.username}</Text>
+      <Text style={styles.sectionTitle}>Your Quizzes</Text>
 
-
-          <Text style={styles.labelText}>Your Quizzes</Text>
       {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#0000ff" style={styles.loadingIndicator} />
       ) : (
         <>
           {userQuizzes.length > 0 ? (
-            userQuizzes.map((quiz: Quiz) => (
+            userQuizzes.map((quiz) => (
               <TouchableOpacity
                 key={quiz.id}
-                style={[styles.box, styles.boxBackgroundYellow]}
+                style={[styles.quizBox, styles.boxBackgroundYellow]}
                 onPress={() => {
                   router.push({
                     pathname: '/quizJogavel',
@@ -68,7 +79,7 @@ export default function ProfileScreen() {
                   });
                 }}
               >
-                <Text>{quiz.name}</Text>
+                <Text style={styles.quizName}>{quiz.name}</Text>
               </TouchableOpacity>
             ))
           ) : (
@@ -76,9 +87,6 @@ export default function ProfileScreen() {
           )}
         </>
       )}
-          </View>
-          </View>
-        </View>
     </View>
   );
 }
@@ -88,11 +96,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  column: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 20,
   },
   circle: {
     width: 100,
@@ -100,20 +104,31 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     backgroundColor: '#ccc',
     marginBottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  labelText: {
-    fontSize: 18,
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+  username: {
+    fontSize: 24,
+    fontWeight: 'bold',
     color: '#333',
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#555',
     marginBottom: 10,
+    alignSelf: 'flex-start',
   },
-  row: {
-    width: '100%',
-    paddingHorizontal: 20,
-  },
-  box: {
+  quizBox: {
     width: '100%',
     padding: 20,
-    borderRadius: 8,
+    borderRadius: 10,
     marginBottom: 10,
     alignItems: 'center',
     justifyContent: 'center',
@@ -121,24 +136,50 @@ const styles = StyleSheet.create({
   boxBackgroundYellow: {
     backgroundColor: '#FCC307',
   },
+  quizName: {
+    color: '#F8FAF4',
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: 'Poppins_300Light',
+  },
   noQuizzesText: {
     color: '#999',
     textAlign: 'center',
     marginTop: 20,
   },
-  loading: {
+  loadingIndicator: {
+    marginTop: 20,
+  },
+  modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
-  errorText: {
-    color: 'red',
-    textAlign: 'center',
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 20,
+  },
+  imageRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '80%',
+  },
+  modalImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+  },
+  closeButton: {
     marginTop: 20,
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 8,
   },
-  profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+  closeButtonText: {
+    color: '#333',
+    fontWeight: 'bold',
   },
 });
