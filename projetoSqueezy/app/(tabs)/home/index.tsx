@@ -44,14 +44,14 @@ export default function HomeScreen() {
   }, []);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" style={styles.loading} />;
+    return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
 
-        <View style={[styles.headerTextContainer, { marginLeft: 10 }]}>
+        <View style={[ { marginLeft: 10 }]}>
           <Text style={styles.headerText}>Hello, {userName}</Text>
         </View>
       </View>
@@ -100,26 +100,19 @@ export default function HomeScreen() {
       <View style={[styles.column, styles.categoriesContainer]}>
         <Text style={styles.categoryTitle}>Categories</Text>
         <View style={styles.categoriesGrid}>
-<<<<<<< HEAD
-          {['Tech', 'Entertainment', 'Science', 'Geography', 'History', 'Sports'].map((category, index) => (
-            <View key={index} style={[styles.boxCategories, index % 3 === 0 ? styles.categoryBackground1 : index % 3 === 1 ? styles.categoryBackground2 : styles.categoryBackground3]}>
-              <Text style={styles.linkText}>{category}</Text>
-            </View>
-=======
           {categories.map((category, index) => (
             <TouchableOpacity
               key={index}
               style={[
                 styles.boxCategories,
-                { backgroundColor: category.color },
-                index % 2 === 0 ? styles.categoryBackground1 : styles.categoryBackground2,
+                { backgroundColor: category.color }
+                
               ]}
               onPress={() => router.push(category.route)}
             >
-              <Image source={category.icon} style={styles.categoryIcon} />
+              <Image source={category.icon}/>
               <Text style={styles.linkText}>{category.name}</Text>
             </TouchableOpacity>
->>>>>>> 351d62ebc6db294101860fc2bd25d03be701d1ee
           ))}
         </View>
       </View>
@@ -148,23 +141,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     height: '8%',
   },
-<<<<<<< HEAD
-  circle: {
-    width: 48,
-    height: 48,
-    borderRadius: 100,
-    backgroundColor: 'gray',
-  },
-  headerTextContainer: {
-    width: '60%',
-    height: '100%',
-    marginTop: 10,
-    marginLeft: 10,
-  },
-=======
 
 
->>>>>>> 351d62ebc6db294101860fc2bd25d03be701d1ee
   headerText: {
     marginTop: '7%',
     fontWeight: 'bold',
@@ -173,8 +151,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins_300Light',
     textAlign: 'left',
     width: '90%',
-    fontSize: 14,
-    color: 'black',
   },
   row: {
     width: '100%',
@@ -244,7 +220,7 @@ const styles = StyleSheet.create({
     height: 64,
     margin: 5,
     borderRadius: 10,
-    justifyContent: 'left',
+  
     alignItems: 'center',
     flexDirection: 'row', // Para alinhar ícone e texto na mesma linha
     paddingHorizontal: 10, // Espaçamento horizontal entre ícone e texto
@@ -257,64 +233,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-<<<<<<< HEAD
-  categoriesContainer: {
-    height: '40%',
-  },
-  categoriesGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  text: {
-    fontSize: 18,
-  },
-  linkText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: 'white',
-    textShadowColor: '#1E1E1E',
-    textShadowOffset: { width: 1, height: 4 },
-    textShadowRadius: 4,
-    textAlign: 'center',
-    shadowOpacity: 0.25,
-  },
-  fullAreaLink: {
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  categoriesText: {
-    textAlign: 'left',
-    width: '100%',
-  },
-  boxBackground1: {
-    backgroundColor: '#FCC307',
-  },
-  boxBackground2: {
-    backgroundColor: '#05203C',
-  },
-  boxBackground3: {
-    backgroundColor: '#4FDB38',
-  },
-  boxBackgroundRandom: {
-    backgroundColor: '#FCC307',
-  },
-  boxBackgroundSeeAll: {
-    backgroundColor: 'skyblue',
-  },
-  categoryBackground1: {
-    backgroundColor: '#FCC307',
-  },
-  categoryBackground2: {
-    backgroundColor: '#05203C',
-  },
-  categoryBackground3: {
-    backgroundColor: '#4FDB38',
-  },
-});
-=======
     categoriesContainer: {
       height: '36%',
     },
@@ -359,5 +277,3 @@ const styles = StyleSheet.create({
     },
   });
 
-
->>>>>>> 351d62ebc6db294101860fc2bd25d03be701d1ee
