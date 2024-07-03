@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator, Alert, SafeAreaView } from 'react-native';
+import { View, Image, Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator, Alert, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFonts, Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic } from '@expo-google-fonts/poppins';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -26,14 +26,10 @@ export default function SignInScreen() {
       const userDataJson = await AsyncStorage.getItem('user');
       if (userDataJson) {
         const userData = JSON.parse(userDataJson);
-        if (userData.email === email) {
-          if (userData.password === password) {
-            router.replace("/home");
-          } else {
-            Alert.alert("Invalid Credentials", "The password you entered is incorrect.");
-          }
+        if (userData.email === email && userData.password === password) { // Verifique se a senha está correta
+          router.replace("/home");
         } else {
-          Alert.alert("Email Not Found", "No account found with this email.");
+          Alert.alert("Invalid Credentials", "The email or password you entered is incorrect.");
         }
       } else {
         Alert.alert("No Users", "No user data found.");
@@ -48,7 +44,10 @@ export default function SignInScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText}>Sign In</Text>
+      <Image source={require('../../assets/images/SquizzyLogo2.png')} style={styles.reactLogo} />
+      
+      <Text style={styles.headerText}>Sign in to your account</Text>
+      <Text style={{marginBottom:25}}>Enter your email and password to sign in</Text>
       <SafeAreaView style={styles.inputFields}>
         <Text style={styles.labelText}>Email</Text>
         <TextInput
@@ -78,6 +77,7 @@ export default function SignInScreen() {
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -98,11 +98,15 @@ const styles = StyleSheet.create({
     borderColor: '#E0E0E0',
     color: '#828282',
   },
+  reactLogo: {
+    height: '30%',
+    width: '50%',
+  },
   headerText: {
     color: '#000',
     fontSize: 18,
     fontFamily: 'Poppins_300Light',
-    marginTop: '2%',
+
   },
   labelText: {
     color: '#000',

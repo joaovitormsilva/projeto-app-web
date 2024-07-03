@@ -1,20 +1,26 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
-import { useRouter } from 'expo-router';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, ActivityIndicator, ScrollView } from 'react-native';import { useRouter } from 'expo-router';
 import { useFonts, Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic } from '@expo-google-fonts/poppins';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { Picker } from '@react-native-picker/picker';
+import uuid from 'react-native-uuid';
+import { useQuiz } from '../../scripts/QuizContext';
+import { useUser } from '../../scripts/UserContext';
+import { FontAwesome } from '@expo/vector-icons';  // Import FontAwesome
 
 export default function CreateQuizScreen() {
   const router = useRouter();
-  const [inputText, setInputText] = useState<string>('');
-  const [descriptionText, setDescriptionText] = useState<string>('');
-  const [category, setCategory] = useState<string>('');
-  const [numQuestions, setNumQuestions] = useState<string>('5');
-  const [duration, setDuration] = useState<string>('5');
+  const [inputText, setInputText] = useState('');
+  const [descriptionText, setDescriptionText] = useState('');
+  const [category, setCategory] = useState('');
+  const [numQuestions, setNumQuestions] = useState('5');
+  const [duration, setDuration] = useState('5');
   const [image, setImage] = useState<string | null>(null);
-  const [saving, setSaving] = useState<boolean>(false);
+  const [saving, setSaving] = useState(false);
+  const { saveQuiz } = useQuiz();
+  const { user } = useUser();
+
   let [fontsLoaded] = useFonts({ Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic });
 
   if (!fontsLoaded) {
@@ -62,18 +68,39 @@ export default function CreateQuizScreen() {
   };
 
   const handleConfirm = () => {
-    // Navegar para a tela de criação de perguntas com o número de questões como parâmetro
-    router.push({
-      pathname: '../createQuestions',
-      params: { numQuestions: numQuestions },
-    });
+    if (user) {
+      const newQuiz = {
+        id: uuid.v4() as string,
+        name: inputText,
+        description: descriptionText,
+        category,
+        numQuestions: parseInt(numQuestions),
+        duration: parseInt(duration),
+        imageUri: image || undefined,
+        userId: user.id,
+        questions: []
+      };
+
+      saveQuiz(newQuiz, user.id).then(() => {
+        router.replace({
+          pathname: '../createQuestions',
+          params: { quizId: newQuiz.id, numQuestions },
+        });
+      });
+    } else {
+      alert("User not found. Please log in again.");
+    }
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
+
+
       <TouchableOpacity style={[styles.boxSetQuiz]} onPress={pickImage}>
-        <Text style={[styles.textThumbnail, { width: '90%', textAlign: 'left' }]}>Set Quiz Thumbnail</Text>
+        <Text style={[styles.textThumbnail, { width: '100%', textAlign: 'left' }]}>Set Quiz Thumbnail</Text>
         <View style={styles.boxUpload}>
+          <FontAwesome name="arrow-circle-up" size={24} color="#fff" />
+          
           <Text style={styles.textThumbnail}>Click to upload</Text>
           <Text style={[styles.textThumbnail, { fontSize: 12, color: '#9E9E9E' }]}>.svg .jpg .png etc</Text>
         </View>
@@ -103,9 +130,9 @@ export default function CreateQuizScreen() {
         style={[styles.input, { height: 100 }]}
         value={descriptionText}
         onChangeText={setDescriptionText}
-        placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sodales diam ac tincidunt malesuada. In hac habitasse platea dictumst."
+        placeholder="Write a description for your quiz..."
         placeholderTextColor="#aaa"
-        multiline={true}
+        multiline
         maxLength={100}
       />
       <Text style={styles.counterText}>{descriptionText.length}/100</Text>
@@ -116,9 +143,13 @@ export default function CreateQuizScreen() {
         style={[styles.picker, styles.borderOnly]}
         onValueChange={(itemValue) => setCategory(itemValue)}
       >
-        <Picker.Item label="Category 1" value="category1" />
-        <Picker.Item label="Category 2" value="category2" />
-        <Picker.Item label="Category 3" value="category3" />
+        <Picker.Item label="Tech" value="tech" />
+        <Picker.Item label="Science" value="Science" />
+        <Picker.Item label="History" value="history" />
+        <Picker.Item label="Entertainment" value="entertainment" />
+        <Picker.Item label="Geography" value="geography" />
+        <Picker.Item label="Sports" value="sports" />
+        <Picker.Item label="Others" value="others" />
       </Picker>
 
       <Text style={styles.text}>Number of Questions</Text>
@@ -144,107 +175,94 @@ export default function CreateQuizScreen() {
       </Picker>
 
       <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
-        <Text style={styles.confirmButtonText}>Confirmar</Text>
+        <Text style={styles.confirmButtonText}>Next</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  box: {
-    width: '65%',
-    height: 50,
-    borderRadius: 8,
-    margin: 8,
+  container: {
+    flexGrow: 1,
+    padding: 16,
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FCC307',
-  },
-  boxSetQuiz: {
-    width: '90%',
-    height: '18%',
-    borderRadius: 8,
-    backgroundColor: '#05203C',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  boxUpload: {
-    width: '90%',
-    height: '63%',
-    borderRadius: 8,
-    margin: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderColor: 'white',
-    borderWidth: 1,
-    borderStyle: 'dashed',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '90%',
+    width: '100%',
   },
   textThumbnail: {
-    color: 'white',
-    fontSize: 18,
+    fontSize: 16,
+    color: '#fff',
   },
-  container: {
-    flex: 1,
-    backgroundColor: '#F8FAF4',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    color: '#05203C',
-    fontSize: 14,
-    fontFamily: 'Poppins_300Light',
-    textAlign: 'left',
-    width: '90%',
-  },
-  input: {
-    width: '90%',
-    borderColor: '#ccc',
+  boxSetQuiz: {
+    width:'100%',
+    backgroundColor:'#05203C',
+    borderColor: '#05203C',
     borderWidth: 1,
     borderRadius: 8,
-    marginBottom: 20,
-    paddingLeft: 10,
-    color: 'black',
+    padding: 16,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  boxUpload: {
+    width:'100%',
+    marginTop: 8,
+    borderColor: '#fff',
+    borderWidth: 2,
+    borderRadius: 8,
+    borderStyle:'dotted',
+    padding: 8,
+    alignItems: 'center',
+  },
+  successMessage: {
+    color: 'green',
+    marginBottom: 8,
+  },
+  box: {
+    backgroundColor: '#FCC307',
+    padding: 16,
+    borderRadius: 4,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  text: {
+    color: '#000',
+    fontSize: 16,
+    marginBottom: 8,
+    alignSelf: 'center',
+  },
+  input: {
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 4,
+    padding: 8,
+    marginBottom: 16,
+    width: '100%',
+  },
+  counterText: {
+    alignSelf: 'flex-end',
+    color: '#aaa',
+    marginBottom: 16,
   },
   picker: {
-    height: 40,
-    width: '90%',
-    marginBottom: 20,
+    width: '100%',
+    height: 50,
+    marginBottom: 16,
   },
   borderOnly: {
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 8,
-  },
-  successMessage: {
-    color: '#00FF00',
-    fontSize: 16,
-    marginVertical: 10,
-    fontFamily: 'Poppins_300Light',
-  },
-  counterText: {
-    width: '90%',
-    textAlign: 'right',
-    color: '#aaa',
-    fontSize: 12,
-    marginBottom: 10,
+    borderRadius: 4,
   },
   confirmButton: {
-    width: '90%',
-    height: 50,
-    borderRadius: 8,
-    margin: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#05203C',
+    padding: 16,
+    paddingHorizontal: 64,
+    borderRadius: 8,
+    alignItems: 'center',
   },
   confirmButtonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontFamily: 'Poppins_300Light',
+    color: '#fff',
+    fontSize: 16,
   },
 });

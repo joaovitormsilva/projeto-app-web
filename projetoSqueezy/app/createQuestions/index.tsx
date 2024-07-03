@@ -1,18 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import uuid from 'react-native-uuid';
+import { useQuiz, Quiz, Question } from '../../scripts/QuizContext'; // Importar a interface Quiz e Question corretamente
+import { useUser } from '../../scripts/UserContext';
 
 export default function CreateQuestionsScreen() {
   const router = useRouter();
-  const { numQuestions } = useLocalSearchParams();
-  
-  // Garantir que numQuestions é uma string e fornecer um valor padrão se for undefined
+  const { quizId, numQuestions } = useLocalSearchParams();
+  const { quizzes, saveQuiz } = useQuiz();
+  const { user } = useUser();
   const questionsCount = parseInt(numQuestions as string) || 5;
-  
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questions, setQuestions] = useState<string[]>(Array(questionsCount).fill(''));
-  const [options, setOptions] = useState<string[][]>(Array(questionsCount).fill(Array(5).fill('')));
+  const [options, setOptions] = useState<{ id: string; text: string; correct: boolean }[][]>(Array.from({ length: questionsCount }, () => Array(4).fill({ id: '', text: '', correct: false })));
   const [correctAnswers, setCorrectAnswers] = useState<(number | null)[]>(Array(questionsCount).fill(null));
+
+  // Buscando o quiz existente
+  const existingQuiz = quizzes.find(q => q.id === quizId);
+  
+  useEffect(() => {
+    if (!existingQuiz) {
+      Alert.alert('Quiz not found', 'The specified quiz does not exist.');
+      router.replace('/profile'); // Redireciona de volta ao perfil caso o quiz não seja encontrado
+    }
+  }, [existingQuiz]);
 
   const handleQuestionChange = (text: string) => {
     const newQuestions = [...questions];
@@ -22,7 +34,7 @@ export default function CreateQuestionsScreen() {
 
   const handleOptionChange = (text: string, optionIndex: number) => {
     const newOptions = [...options];
-    newOptions[currentQuestionIndex][optionIndex] = text;
+    newOptions[currentQuestionIndex][optionIndex] = { ...newOptions[currentQuestionIndex][optionIndex], text };
     setOptions(newOptions);
   };
 
@@ -32,12 +44,12 @@ export default function CreateQuestionsScreen() {
     setCorrectAnswers(newCorrectAnswers);
   };
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = async () => {
     const currentQuestion = questions[currentQuestionIndex];
     const currentOptions = options[currentQuestionIndex];
     const currentCorrectAnswer = correctAnswers[currentQuestionIndex];
 
-    if (!currentQuestion || currentOptions.includes('') || currentCorrectAnswer === null) {
+    if (!currentQuestion || currentOptions.some(opt => opt.text === '') || currentCorrectAnswer === null) {
       Alert.alert('Incomplete Question', 'Please complete the question and all options, and select the correct answer before proceeding.');
       return;
     }
@@ -45,15 +57,34 @@ export default function CreateQuestionsScreen() {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      // Navegar para a tela de conclusão do quiz
-      router.push('/finishQuiz');
+      const formattedQuestions: Question[] = questions.map((questionText, index) => ({
+        id: uuid.v4() as string,
+        questionText,
+        options: options[index].map((opt, optIndex) => ({
+          id: uuid.v4() as string,
+          text: opt.text,
+          correct: correctAnswers[index] === optIndex,
+        })),
+      }));
+
+      const newQuizWithQuestions: Quiz = {
+        ...existingQuiz!,
+        questions: formattedQuestions,
+      };
+
+      await saveQuiz(newQuizWithQuestions, user.id);
+      router.replace('/finishQuiz');
     }
   };
+
+  if (!existingQuiz) {
+    return <Text>Loading...</Text>;
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Question {currentQuestionIndex + 1}</Text>
-      
+
       <TextInput
         style={styles.input}
         value={questions[currentQuestionIndex]}
@@ -62,11 +93,11 @@ export default function CreateQuestionsScreen() {
         placeholderTextColor="#aaa"
       />
 
-      {options[currentQuestionIndex].map((option: string, index: number) => (
+      {options[currentQuestionIndex].map((option, index) => (
         <View key={index} style={styles.optionContainer}>
           <TextInput
             style={[styles.input, styles.optionInput]}
-            value={option}
+            value={option.text}
             onChangeText={(text) => handleOptionChange(text, index)}
             placeholder={`Option ${index + 1}`}
             placeholderTextColor="#aaa"
@@ -90,7 +121,6 @@ export default function CreateQuestionsScreen() {
           {currentQuestionIndex < questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
         </Text>
       </TouchableOpacity>
-
     </View>
   );
 }
@@ -98,7 +128,7 @@ export default function CreateQuestionsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAF4',
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },

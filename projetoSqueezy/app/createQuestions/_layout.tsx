@@ -10,14 +10,14 @@ export default function LayoutCreateQuestions() {
     screenOptions={
         {
             headerStyle:{
-              backgroundColor:'#F8FAF4'
+              backgroundColor:'#fff'
             },
             headerShadowVisible:false,
             headerTitleAlign:'center'
         }
         
     }>
-      <Stack.Screen name="index" options={{title:"Create Questions", headerShown: true}}/>
+      <Stack.Screen name="index" options={{title:"Create Questions", headerShown: false}}/>
 
       </Stack>
   )

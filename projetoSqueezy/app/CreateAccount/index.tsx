@@ -1,14 +1,21 @@
-import { Image, View, Text, StyleSheet, Button, SafeAreaView, TextInput, ActivityIndicator, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator, SafeAreaView, TextInput, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFonts, Poppins_100Thin, Poppins_300Light, Poppins_900Black_Italic } from '@expo-google-fonts/poppins';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useUser } from '../../scripts/UserContext'; // Certifique-se de que o caminho está correto
+import uuid from 'react-native-uuid'; // Importe a função para gerar UUID
 
 export default function CreateAccountScreen() {
+  const { setUser } = useUser(); // Certifique-se de acessar setUser corretamente
   const router = useRouter();
-  const [user, setUser] = useState('');
+  const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const handleUserChange = (text: React.SetStateAction<string>) => setUserName(text);
+  const handleEmailChange = (text: React.SetStateAction<string>) => setEmail(text);
+  const handlePasswordChange = (text: React.SetStateAction<string>) => setPassword(text);
 
   let [fontsLoaded] = useFonts({
     Poppins_100Thin,
@@ -17,18 +24,21 @@ export default function CreateAccountScreen() {
   });
 
   if (!fontsLoaded) {
-    return <ActivityIndicator size="large" color="#0000ff" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />;
+    return <ActivityIndicator size="large" color="#0000ff" style={styles.loading} />;
   }
 
   const saveUserData = async () => {
     const userData = {
-      user,
+      id: uuid.v4(), // Gerando um ID único
+      username: userName, // Certifique-se de armazenar o nome do usuário
       email,
-      password,
+      password, // Armazene a senha
+      quizzes: [],
     };
 
     try {
       await AsyncStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData); // Utilize setUser para atualizar o contexto
       router.replace("/home");
     } catch (error) {
       console.error('Failed to save user data', error);
@@ -45,15 +55,15 @@ export default function CreateAccountScreen() {
         <Text style={styles.labelText}>User</Text>
         <TextInput
           style={styles.input}
-          onChangeText={setUser}
-          value={user}
+          onChangeText={handleUserChange}
+          value={userName}
           placeholder="Enter your username"
           secureTextEntry={false}
         />
         <Text style={styles.labelText}>Email</Text>
         <TextInput
           style={styles.input}
-          onChangeText={setEmail}
+          onChangeText={handleEmailChange}
           value={email}
           placeholder="email@domain.com"
           secureTextEntry={false}
@@ -61,7 +71,7 @@ export default function CreateAccountScreen() {
         <Text style={styles.labelText}>Password</Text>
         <TextInput
           style={styles.input}
-          onChangeText={setPassword}
+          onChangeText={handlePasswordChange}
           value={password}
           placeholder="Enter your password"
           secureTextEntry={true}
@@ -73,7 +83,6 @@ export default function CreateAccountScreen() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -126,5 +135,10 @@ const styles = StyleSheet.create({
     color: '#fff', // Cor do texto do botão
     fontSize: 14,
     fontFamily: 'Poppins_300Light',
+  },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

@@ -11,6 +11,7 @@ export default function RankingScreen() {
 
 
       <Text>RankingScreen</Text>
+      <Text style={styles.text}>This feature has not been implemented yet.</Text>
 
 
       
@@ -24,7 +25,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center'
-  }
+  },
+  text: {
+    fontSize: 18,
+    color: '#000',
+  },
 
 
 })

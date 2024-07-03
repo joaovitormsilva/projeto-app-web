@@ -7,7 +7,7 @@ export default function QuizCompletionScreen() {
   const router = useRouter();
 
   const handleGoHome = () => {
-    router.push('/home'); // Substitua '/HomeScreen' pela tela inicial da sua aplicação
+    router.replace('/home'); // Substitua '/HomeScreen' pela tela inicial da sua aplicação
   };
 
   return (
@@ -26,7 +26,7 @@ export default function QuizCompletionScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAF4',
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },

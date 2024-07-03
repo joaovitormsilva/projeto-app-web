@@ -6,12 +6,15 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 export default function Layout() {
   const colorScheme = useColorScheme();
   
+ 
   return (
     <Tabs       
     screenOptions={{
       tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
       headerShown: false,
-      headerShadowVisible: false
+      headerShadowVisible: false,
+      headerTitleAlign:'center',
+     
      }}>
       <Tabs.Screen name="home/index" options={{title:'home',
         headerShown: false,
@@ -32,12 +35,11 @@ export default function Layout() {
         )
         }}/>
       <Tabs.Screen name="profile/index" options={{
-        title:'Profile',headerShown: false,
+        title:'Profile',headerShown: true,
         tabBarIcon:({color, focused}) =>(
           <TabBarIcon name={focused ? 'person' : 'person-outline'} color={color}/>
         )
         }}/>
-
     </Tabs>
   )
 }
