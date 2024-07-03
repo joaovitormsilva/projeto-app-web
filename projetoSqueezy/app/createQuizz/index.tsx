@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 16,
     marginBottom: 8,
-    alignSelf: 'flex-start',
+    alignSelf: 'center',
   },
   input: {
     borderColor: '#ccc',
